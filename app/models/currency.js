@@ -1,9 +1,9 @@
-/* jshint indent: 2 */
+const DataTypes = require('sequelize');
+const db = require('../db/db');
 
-module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('currency', {
+const Currency = db.define('currency', {
     PID: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.BIGINT(20).UNSIGNED,
       allowNull: false,
       primaryKey: true,
       autoIncrement: true
@@ -14,13 +14,8 @@ module.exports = function(sequelize, DataTypes) {
       unique: true
     },
     rate: {
-<<<<<<< HEAD
-        type: Sequelize.DOUBLE(8, 2),
-        allowNull: false
-=======
-      type: "DOUBLE(8,2)",
-      allowNull: false
->>>>>>> c831be556d477bd0e20451c7e757279fe8905fb2
+        type: DataTypes.DOUBLE(8, 2),
+        allowNull: false,
     },
     isActive: {
       type: DataTypes.ENUM('active','inactive'),
@@ -36,30 +31,25 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       unique: true
     },
-    created_at: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: sequelize.fn('current_timestamp')
+    createdAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.literal('CURRENT_TIMESTAMP()'),
+        field: 'created_at'
     },
-    updated_at: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: sequelize.fn('current_timestamp')
+    updatedAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.literal('CURRENT_TIMESTAMP()'),
+        field: 'updated_at'
     },
     deleted_at: {
       type: DataTypes.DATE,
       allowNull: true
     }
-<<<<<<< HEAD
 }, {
     freezeTableName: true,
     tableName: 'currency'
 });
 
 module.exports = Currency;
-=======
-  }, {
-    tableName: 'currency'
-  });
-};
->>>>>>> c831be556d477bd0e20451c7e757279fe8905fb2
