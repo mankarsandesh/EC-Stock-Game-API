@@ -15,7 +15,7 @@ const Currency = sequelize.define('currency', {
         unique: true,
     },
     rate: {
-        type: Sequelize.DOUBLE(8, 12),
+        type: Sequelize.DOUBLE(8, 2),
         allowNull: false
     },
     isActive: {
@@ -44,6 +44,9 @@ const Currency = sequelize.define('currency', {
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP()'),
         field: 'updated_at'
     }
+}, {
+    freezeTableName: true,
+    tableName: 'currency'
 });
 
 module.exports = Currency;

@@ -10,6 +10,9 @@ require('dotenv').config();
 // Connect DB
 require('./app/db/db');
 
+// Routers
+const currencyRouter = require('./app/router/currency');
+
 const bodyParser = require('body-parser');
 
 const port = process.env.PORT || 5010;
@@ -27,6 +30,9 @@ const corsOptions = {
 
 //CORS middleware
 app.use(cors(corsOptions));
+
+// Routers
+app.use(currencyRouter);
 
 app.listen(port, () => {
     console.log(`Server is up on port ${port}`);
