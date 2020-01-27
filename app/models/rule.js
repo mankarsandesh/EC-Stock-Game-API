@@ -1,7 +1,9 @@
 /* jshint indent: 2 */
+const DataTypes = require('sequelize');
+const db = require('../db/db');
 
-module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('rule', {
+
+  const Rule =  db.define('rule', {
     PID: {
       type: DataTypes.BIGINT,
       allowNull: false,
@@ -22,17 +24,22 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       defaultValue: 'active'
     },
-    created_at: {
+    createdAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: sequelize.fn('current_timestamp')
+      defaultValue: DataTypes.literal('CURRENT_TIMESTAMP()'),
+      field: 'created_at'
     },
-    updated_at: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: sequelize.fn('current_timestamp')
+    updatedAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.literal('CURRENT_TIMESTAMP()'),
+        field: 'updated_at'
     }
   }, {
+    freezeTableName: true,
     tableName: 'rule'
   });
-};
+
+
+  module.exports = Rule;

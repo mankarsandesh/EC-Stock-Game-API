@@ -12,11 +12,10 @@ require('./app/db/db');
 
 // Routers
 const currencyRouter = require('./app/router/currency');
+const ruleRouter = require('./app/router/rule');
 
 const bodyParser = require('body-parser');
-
-const port = process.env.PORT || 5010;
-
+const port = process.env.PORT || 5000;
 app.use(bodyParser.json());
 app.use(upload.array());
 
@@ -33,6 +32,7 @@ app.use(cors(corsOptions));
 
 // Routers
 app.use(currencyRouter);
+app.use(ruleRouter);
 
 app.listen(port, () => {
     console.log(`Server is up on port ${port}`);
