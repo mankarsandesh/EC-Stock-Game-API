@@ -1,15 +1,20 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
+const multer = require('multer');
+const upload = multer();
 
+// Load all environment variables
+require('dotenv').config();
 
+require('./app/db/db');
 
 const bodyParser = require('body-parser');
 
+const port = process.env.PORT || 5010;
 
-
-const port = process.env.PORT || 1001;
 app.use(bodyParser.json());
+app.use(upload.array());
 
 //CORS configuration
 const corsOptions = {
@@ -18,6 +23,7 @@ const corsOptions = {
     exposedHeaders: ['token'],
     withCredentials: true
 };
+
 //CORS middleware
 app.use(cors(corsOptions));
 
