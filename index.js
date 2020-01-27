@@ -7,6 +7,7 @@ const upload = multer();
 // Load all environment variables
 require('dotenv').config();
 
+// Connect DB
 require('./app/db/db');
 
 const bodyParser = require('body-parser');
