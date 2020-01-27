@@ -12,7 +12,7 @@ function errorHandler (status=false, code, message, error) {
         status,
         code,
         message,
-        data
+        error
     }
 }
 

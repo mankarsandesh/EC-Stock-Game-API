@@ -30,7 +30,41 @@ async function storeAnnouncement (data) {
     }
 }
 
+// Get announcement by Id
+async function getAnnouncementById (announcementId) {
+    try {
+        const announcement = await Announcement.findOne({
+            where: {
+                PID: announcementId
+            },
+            raw: true
+        });
+        return announcement;
+    } catch (error) {
+        console.log(error);
+        throw new Error();
+    }
+}
+
+// Update Announcement By Id
+async function updateAnnouncementById (data, announcementId) {
+    try {
+        const updated = await Announcement.update(data, {
+            where: {
+                PID: announcementId
+            },
+            raw: true
+        });
+        return updated;
+    } catch (error) {
+        console.log(error);
+        throw new Error();
+    }
+}
+
 module.exports = {
     getAllAnnouncements,
-    storeAnnouncement
+    storeAnnouncement,
+    getAnnouncementById,
+    updateAnnouncementById
 }
