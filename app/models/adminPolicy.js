@@ -1,7 +1,7 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('currency', {
+  return sequelize.define('adminPolicy', {
     PID: {
       type: DataTypes.BIGINT,
       allowNull: false,
@@ -13,28 +13,35 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       unique: true
     },
-    rate: {
-<<<<<<< HEAD
-        type: Sequelize.DOUBLE(8, 2),
-        allowNull: false
-=======
-      type: "DOUBLE(8,2)",
+    userLockTime: {
+      type: DataTypes.INTEGER(11),
+      allowNull: true
+    },
+    invalidAttemptsAllowed: {
+      type: DataTypes.INTEGER(11),
+      allowNull: true
+    },
+    otpValidTime: {
+      type: DataTypes.INTEGER(11),
+      allowNull: true
+    },
+    passwordResetTime: {
+      type: DataTypes.INTEGER(11),
+      allowNull: true
+    },
+    isApiAllowed: {
+      type: DataTypes.ENUM('true','false'),
+      allowNull: false,
+      defaultValue: 'true'
+    },
+    source: {
+      type: DataTypes.INTEGER(4),
       allowNull: false
->>>>>>> c831be556d477bd0e20451c7e757279fe8905fb2
     },
     isActive: {
       type: DataTypes.ENUM('active','inactive'),
       allowNull: false,
       defaultValue: 'active'
-    },
-    symbol: {
-      type: DataTypes.STRING(255),
-      allowNull: false
-    },
-    abbreviation: {
-      type: DataTypes.STRING(255),
-      allowNull: false,
-      unique: true
     },
     created_at: {
       type: DataTypes.DATE,
@@ -50,16 +57,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.DATE,
       allowNull: true
     }
-<<<<<<< HEAD
-}, {
-    freezeTableName: true,
-    tableName: 'currency'
-});
-
-module.exports = Currency;
-=======
   }, {
-    tableName: 'currency'
+    tableName: 'adminPolicy'
   });
 };
->>>>>>> c831be556d477bd0e20451c7e757279fe8905fb2
