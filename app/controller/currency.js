@@ -3,7 +3,6 @@ const Currency = require('../models/currency');
 async function getAllCurrencies () {
     try {
         const currencies = await Currency.findAll({raw: true});
-        console.log(currencies)
         return currencies;
     } catch (error) {
         console.log(error);
