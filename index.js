@@ -12,6 +12,7 @@ require('./app/db/db');
 
 // Routers
 const currencyRouter = require('./app/router/currency');
+const announcementRouter = require('./app/router/announcement');
 
 const bodyParser = require('body-parser');
 
@@ -33,6 +34,7 @@ app.use(cors(corsOptions));
 
 // Routers
 app.use(currencyRouter);
+app.use(announcementRouter);
 
 app.listen(port, () => {
     console.log(`Server is up on port ${port}`);
