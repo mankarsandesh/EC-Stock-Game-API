@@ -1,7 +1,7 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('currency', {
+  return sequelize.define('userPolicy', {
     PID: {
       type: DataTypes.BIGINT,
       allowNull: false,
@@ -13,23 +13,31 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       unique: true
     },
-    rate: {
-      type: "DOUBLE(8,2)",
-      allowNull: false
+    userLockTime: {
+      type: DataTypes.INTEGER(11),
+      allowNull: true
+    },
+    invalidAttemptsAllowed: {
+      type: DataTypes.INTEGER(11),
+      allowNull: true
+    },
+    otpValidTime: {
+      type: DataTypes.INTEGER(11),
+      allowNull: true
+    },
+    passwordResetTime: {
+      type: DataTypes.INTEGER(11),
+      allowNull: true
+    },
+    sessionLifetime: {
+      type: DataTypes.INTEGER(11),
+      allowNull: false,
+      defaultValue: '300'
     },
     isActive: {
       type: DataTypes.ENUM('active','inactive'),
       allowNull: false,
       defaultValue: 'active'
-    },
-    symbol: {
-      type: DataTypes.STRING(255),
-      allowNull: false
-    },
-    abbreviation: {
-      type: DataTypes.STRING(255),
-      allowNull: false,
-      unique: true
     },
     created_at: {
       type: DataTypes.DATE,
@@ -46,6 +54,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     }
   }, {
-    tableName: 'currency'
+    tableName: 'userPolicy'
   });
 };

@@ -1,35 +1,24 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('currency', {
+  return sequelize.define('announcement', {
     PID: {
       type: DataTypes.BIGINT,
       allowNull: false,
       primaryKey: true,
       autoIncrement: true
     },
-    name: {
-      type: DataTypes.STRING(255),
-      allowNull: false,
-      unique: true
-    },
-    rate: {
-      type: "DOUBLE(8,2)",
+    adminID: {
+      type: DataTypes.BIGINT,
       allowNull: false
     },
-    isActive: {
-      type: DataTypes.ENUM('active','inactive'),
-      allowNull: false,
-      defaultValue: 'active'
-    },
-    symbol: {
+    title: {
       type: DataTypes.STRING(255),
       allowNull: false
     },
-    abbreviation: {
-      type: DataTypes.STRING(255),
-      allowNull: false,
-      unique: true
+    message: {
+      type: DataTypes.STRING(1000),
+      allowNull: false
     },
     created_at: {
       type: DataTypes.DATE,
@@ -46,6 +35,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     }
   }, {
-    tableName: 'currency'
+    tableName: 'announcement'
   });
 };

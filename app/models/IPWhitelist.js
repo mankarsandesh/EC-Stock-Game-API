@@ -1,7 +1,7 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('currency', {
+  return sequelize.define('IPWhitelist', {
     PID: {
       type: DataTypes.BIGINT,
       allowNull: false,
@@ -10,26 +10,15 @@ module.exports = function(sequelize, DataTypes) {
     },
     name: {
       type: DataTypes.STRING(255),
-      allowNull: false,
-      unique: true
-    },
-    rate: {
-      type: "DOUBLE(8,2)",
       allowNull: false
     },
-    isActive: {
-      type: DataTypes.ENUM('active','inactive'),
-      allowNull: false,
-      defaultValue: 'active'
-    },
-    symbol: {
+    IP: {
       type: DataTypes.STRING(255),
       allowNull: false
     },
-    abbreviation: {
-      type: DataTypes.STRING(255),
-      allowNull: false,
-      unique: true
+    adminID: {
+      type: DataTypes.BIGINT,
+      allowNull: false
     },
     created_at: {
       type: DataTypes.DATE,
@@ -46,6 +35,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     }
   }, {
-    tableName: 'currency'
+    tableName: 'IPWhitelist'
   });
 };

@@ -1,7 +1,7 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('currency', {
+  return sequelize.define('rule', {
     PID: {
       type: DataTypes.BIGINT,
       allowNull: false,
@@ -13,23 +13,14 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       unique: true
     },
-    rate: {
-      type: "DOUBLE(8,2)",
+    isMatched: {
+      type: DataTypes.STRING(255),
       allowNull: false
     },
     isActive: {
       type: DataTypes.ENUM('active','inactive'),
       allowNull: false,
       defaultValue: 'active'
-    },
-    symbol: {
-      type: DataTypes.STRING(255),
-      allowNull: false
-    },
-    abbreviation: {
-      type: DataTypes.STRING(255),
-      allowNull: false,
-      unique: true
     },
     created_at: {
       type: DataTypes.DATE,
@@ -40,12 +31,8 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.DATE,
       allowNull: false,
       defaultValue: sequelize.fn('current_timestamp')
-    },
-    deleted_at: {
-      type: DataTypes.DATE,
-      allowNull: true
     }
   }, {
-    tableName: 'currency'
+    tableName: 'rule'
   });
 };

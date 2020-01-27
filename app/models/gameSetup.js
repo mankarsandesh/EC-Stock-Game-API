@@ -1,35 +1,37 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('currency', {
+  return sequelize.define('gameSetup', {
     PID: {
       type: DataTypes.BIGINT,
       allowNull: false,
       primaryKey: true,
       autoIncrement: true
     },
-    name: {
-      type: DataTypes.STRING(255),
-      allowNull: false,
-      unique: true
+    rulesID: {
+      type: DataTypes.STRING(5000),
+      allowNull: false
     },
-    rate: {
-      type: "DOUBLE(8,2)",
+    gameName: {
+      type: DataTypes.STRING(255),
+      allowNull: false
+    },
+    initialOdds: {
+      type: "DOUBLE",
+      allowNull: false
+    },
+    commission: {
+      type: "DOUBLE",
+      allowNull: false
+    },
+    gameLoop: {
+      type: DataTypes.INTEGER(4),
       allowNull: false
     },
     isActive: {
       type: DataTypes.ENUM('active','inactive'),
       allowNull: false,
       defaultValue: 'active'
-    },
-    symbol: {
-      type: DataTypes.STRING(255),
-      allowNull: false
-    },
-    abbreviation: {
-      type: DataTypes.STRING(255),
-      allowNull: false,
-      unique: true
     },
     created_at: {
       type: DataTypes.DATE,
@@ -46,6 +48,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     }
   }, {
-    tableName: 'currency'
+    tableName: 'gameSetup'
   });
 };
