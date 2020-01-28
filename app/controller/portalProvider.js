@@ -3,7 +3,7 @@ const portalProvider = require('../models/portalProvider');
 async function getPortalProvider (providerUUID) {
     try {
         const provider = await portalProvider.findOne({
-            where: {PID: providerUUID},
+            where: {UUID: providerUUID},
             raw : true
         });
         return provider;

@@ -5,7 +5,7 @@ const { getAllStock } = require('../controller/stock');
 
 
 
-stockRouter.post('/getStockList', async (req, res) => {
+stockRouter.get('/getStockList', async (req, res) => {
     try {      
         const stockList = await getAllStock();
         console.log(stockList);
