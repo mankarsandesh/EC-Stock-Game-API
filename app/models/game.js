@@ -1,7 +1,8 @@
 /* jshint indent: 2 */
+const DataTypes = require('sequelize');
+const db = require('../db/db');
 
-module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('game', {
+  const GameSetup =  db.define('game', {
     PID: {
       type: DataTypes.BIGINT,
       allowNull: false,
@@ -63,10 +64,11 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.TIME,
       allowNull: false
     },
-    updated_at: {
+    updatedAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: sequelize.fn('current_timestamp')
+      defaultValue: DataTypes.literal('CURRENT_TIMESTAMP()'),
+      field: 'updated_at'
     },
     error: {
       type: DataTypes.STRING(5000),
@@ -75,4 +77,5 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     tableName: 'game'
   });
-};
+
+module.exports = GameSetup;
