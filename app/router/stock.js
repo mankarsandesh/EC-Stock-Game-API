@@ -11,6 +11,7 @@ stockRouter.post('/getStockList', async (req, res) => {
         res.send(responseHandler(true,200,'success',stockList)); 
                
     } catch (error) {
+        console.log("Hello");
         console.log(error);
         res.status(500).send({error: 'Internal server error'});
     }

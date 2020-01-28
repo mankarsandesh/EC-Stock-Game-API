@@ -1,11 +1,11 @@
-const Stock = require('../models/stock');
+const StockModel = require('../models/stock');
 
 async function getAllStock () {
     try {
-        const stock = await Stock.findAll({ raw: true });
-        return rule;
+        const stock = await StockModel.findAll({ raw: true });
+        return stock;
     } catch (error) {
-        console.log(error);
+    
         throw new Error();
     }
 }
