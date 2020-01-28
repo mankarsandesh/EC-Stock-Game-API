@@ -1,9 +1,9 @@
-/* jshint indent: 2 */
+const DataTypes = require('sequelize');
+const db = require('../db/db');
 
-module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('user', {
+const User = db.define('user', {
     PID: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.BIGINT(20).UNSIGNED,
       allowNull: false,
       primaryKey: true,
       autoIncrement: true
@@ -13,7 +13,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false
     },
     portalProviderID: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.BIGINT(20).UNSIGNED,
       allowNull: false,
       references: {
         model: 'portalProvider',
@@ -21,7 +21,7 @@ module.exports = function(sequelize, DataTypes) {
       }
     },
     userPolicyID: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.BIGINT(20).UNSIGNED,
       allowNull: false,
       references: {
         model: 'userPolicy',
@@ -49,11 +49,11 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     password: {
-      type: "BLOB",
+      type: DataTypes.BLOB,
       allowNull: true
     },
     balance: {
-      type: "DOUBLE",
+      type: DataTypes.DOUBLE,
       allowNull: false,
       defaultValue: '0'
     },
@@ -89,7 +89,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     activeMinutes: {
-      type: "DOUBLE",
+      type: DataTypes.DOUBLE,
       allowNull: false,
       defaultValue: '0'
     },
@@ -99,21 +99,25 @@ module.exports = function(sequelize, DataTypes) {
       defaultValue: sequelize.fn('uuid'),
       unique: true
     },
-    created_at: {
+    createdAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: sequelize.fn('current_timestamp')
+      defaultValue: DataTypes.literal('CURRENT_TIMESTAMP()'),
+      field: 'created_at'
     },
-    updated_at: {
+    updatedAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: sequelize.fn('current_timestamp')
+      defaultValue: DataTypes.literal('CURRENT_TIMESTAMP()'),
+      field: 'updated_at'
     },
     deleted_at: {
-      type: DataTypes.DATE,
-      allowNull: true
+    type: DataTypes.DATE,
+    allowNull: true
     }
   }, {
+    freezeTableName: true,
     tableName: 'user'
-  });
-};
+});
+
+module.exports = User;

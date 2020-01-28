@@ -1,9 +1,9 @@
-/* jshint indent: 2 */
+const DataTypes = require('sequelize');
+const db = require('../db/db');
 
-module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('portalProvider', {
+const PortalProvider = db.define('portalProvider', {
     PID: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.BIGINT(20).UNSIGNED,
       allowNull: false,
       primaryKey: true,
       autoIncrement: true
@@ -14,7 +14,7 @@ module.exports = function(sequelize, DataTypes) {
       unique: true
     },
     currencyID: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.BIGINT(20).UNSIGNED,
       allowNull: false,
       references: {
         model: 'currency',
@@ -22,11 +22,11 @@ module.exports = function(sequelize, DataTypes) {
       }
     },
     creditBalance: {
-      type: "DOUBLE",
+      type: DataTypes.DOUBLE,
       allowNull: false
     },
     mainBalance: {
-      type: "DOUBLE",
+      type: DataTypes.DOUBLE,
       allowNull: false
     },
     UUID: {
@@ -40,21 +40,25 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       defaultValue: 'active'
     },
-    created_at: {
+    createdAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: sequelize.fn('current_timestamp')
+      defaultValue: DataTypes.literal('CURRENT_TIMESTAMP()'),
+      field: 'created_at'
     },
-    updated_at: {
+    updatedAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: sequelize.fn('current_timestamp')
+      defaultValue: DataTypes.literal('CURRENT_TIMESTAMP()'),
+      field: 'updated_at'
     },
     deleted_at: {
-      type: DataTypes.DATE,
-      allowNull: true
+    type: DataTypes.DATE,
+    allowNull: true
     }
   }, {
-    tableName: 'portalProvider'
-  });
-};
+    freezeTableName: true,
+    tableName: 'portalprovider'
+});
+
+module.exports = PortalProvider;
