@@ -15,6 +15,7 @@ const currencyRouter = require('./app/router/currency');
 const ruleRouter = require('./app/router/rule');
 const announcementRouter = require('./app/router/announcement');
 const userRouter = require('./app/router/user');
+const stockRouter = require('./app/router/stock');
 
 const bodyParser = require('body-parser');
 const port = process.env.PORT || 5000;
@@ -37,7 +38,7 @@ app.use(currencyRouter);
 app.use(ruleRouter);
 app.use(announcementRouter);
 app.use(userRouter);
-
+app.use(stockRouter);
 app.listen(port, () => {
     console.log(`Server is up on port ${port}`);
 });

@@ -1,7 +1,8 @@
 /* jshint indent: 2 */
+const DataTypes = require('sequelize');
+const db = require('../db/db');
 
-module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('stock', {
+  const Stock =  db.define('stock', {
     PID: {
       type: DataTypes.BIGINT,
       allowNull: false,
@@ -94,21 +95,26 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       defaultValue: 'active'
     },
-    created_at: {
+    createdAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: sequelize.fn('current_timestamp')
+      defaultValue: DataTypes.literal('CURRENT_TIMESTAMP()'),
+      field: 'created_at'
     },
-    updated_at: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: sequelize.fn('current_timestamp')
+    updatedAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.literal('CURRENT_TIMESTAMP()'),
+        field: 'updated_at'
     },
-    deleted_at: {
+    deletedAt: {
       type: DataTypes.DATE,
-      allowNull: true
+      allowNull: true,
+      field: 'deleted_at'
     }
   }, {
+    freezeTableName: true,
     tableName: 'stock'
   });
-};
+
+  module.exports = Stock;

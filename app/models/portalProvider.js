@@ -32,7 +32,7 @@ const PortalProvider = db.define('portalProvider', {
     UUID: {
       type: DataTypes.STRING(255),
       allowNull: false,
-      defaultValue: sequelize.fn('uuid'),
+      defaultValue: db.fn('uuid'),
       unique: true
     },
     isActive: {
@@ -62,3 +62,4 @@ const PortalProvider = db.define('portalProvider', {
 });
 
 module.exports = PortalProvider;
+
