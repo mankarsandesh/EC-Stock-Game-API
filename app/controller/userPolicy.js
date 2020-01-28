@@ -1,4 +1,20 @@
 const UserPolicy = require('../models/userPolicy');
 
+async function getUserPolicyById (userPolicyId) {
+    try {
+        const userPolicy = await UserPolicy.findOne({
+            where: {
+                PID: userPolicyId
+            },
+            raw: true
+        });
+        return userPolicy;
+    } catch (error) {
+        console.log(error);
+        throw new Error();
+    }
+}
 
-module.exports = {}
+module.exports = {
+    getUserPolicyById
+}

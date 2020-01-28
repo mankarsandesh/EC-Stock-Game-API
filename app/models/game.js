@@ -53,7 +53,7 @@ const db = require('../db/db');
     UUID: {
       type: DataTypes.STRING(255),
       allowNull: false,
-      defaultValue: sequelize.fn('uuid'),
+      defaultValue: DataTypes.fn('uuid'),
       unique: true
     },
     createdDate: {
