@@ -9,4 +9,23 @@ async function storeUser (data) {
     }
 }
 
-module.exports = User;
+async function getUser(portalProviderUserID, portalProviderID) {
+    try {
+        const user = await User.findOne({
+            where: {
+                portalProviderUserID,
+                portalProviderID
+            },
+            raw: true
+        });
+        return user;
+    } catch (error) {
+        console.log(error);
+        throw new Error();
+    }
+}
+
+module.exports = {
+    storeUser,
+    getUser
+};
