@@ -56,9 +56,10 @@ const db = require('../db/db');
       defaultValue: DataTypes.fn('uuid'),
       unique: true
     },
-    createdDate: {
+    createdAt: {
       type: DataTypes.DATEONLY,
-      allowNull: false
+      allowNull: false,
+      field: 'createdDate'
     },
     createdTime: {
       type: DataTypes.TIME,
@@ -75,6 +76,7 @@ const db = require('../db/db');
       allowNull: true
     }
   }, {
+    freezeTableName: true,
     tableName: 'game'
   });
 

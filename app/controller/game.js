@@ -1,8 +1,7 @@
 const Game = require('../models/game');
 
 async function getGameMatch (gameUUID) {
-    try {
-       
+    try {       
         const checkGame = await Game.findOne({
             where: {
                 UUID: gameUUID,
@@ -10,15 +9,12 @@ async function getGameMatch (gameUUID) {
             },
             raw: true
         });
-
         return checkGame;
     } catch (error) {
         console.log(error);
         throw new Error();
     }
 }
-
-
 module.exports = {
     getGameMatch
 }

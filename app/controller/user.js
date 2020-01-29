@@ -25,7 +25,23 @@ async function getUser(portalProviderUserID, portalProviderID) {
     }
 }
 
+async function getUsersMatch (userUUID) {
+    try {       
+        const checkUsers = await User.findOne({
+            where: {
+                UUID: userUUID
+            },
+            raw: true
+        });
+        return checkUsers;
+    } catch (error) {
+        console.log(error);
+        throw new Error();
+    }
+}
+
 module.exports = {
     storeUser,
-    getUser
+    getUser,
+    getUsersMatch
 };

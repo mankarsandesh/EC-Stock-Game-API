@@ -19,7 +19,7 @@ const stockRouter = require('./app/router/stock');
 const bettingRouter = require('./app/router/betting');
 
 const bodyParser = require('body-parser');
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 5005;
 app.use(bodyParser.json());
 app.use(upload.array());
 
