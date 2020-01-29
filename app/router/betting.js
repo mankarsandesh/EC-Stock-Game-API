@@ -6,15 +6,20 @@ const {getUsersMatch} = require('../controller/user');
 const { findDynamicPayout } = require('../controller/dynamicOdds'); 
 const { getProviderGameMaster } = require('../controller/master'); 
 const {responseHandler, errorHandler} = require('../utils/utils');
+var uuid4 = require('uuid4');
 
+
+var dateFormat = require('dateformat');
 bettingRouter.post('/storeBet', async (req, res) => {
     try {
 
-        const { gameUUID, userUUID, ruleID, betAmount } = req.body;      
+        const { gameUUID, userUUID, ruleID, betAmount,isBot } = req.body;      
         if(gameUUID,userUUID,ruleID,betAmount){
             const findRule = await getRuleMatch(ruleID);
             const findGame = await getGameMatch(gameUUID);
             const userData = await getUsersMatch(userUUID);
+            
+            const BotValue = 0;
             
             // check ruleID is valid or not
             if(!findRule){               
@@ -31,8 +36,7 @@ bettingRouter.post('/storeBet', async (req, res) => {
             if(!userData){
                 res.status(500).send(errorHandler(false, 500, 'Failed', 'UserUID does not exist.'));
             }
-           
-
+            const usedID = userData.PID;
              //checking if user betting on game of his own Provider
             const gameData = await getProviderGameMaster(gameUUID);
            
@@ -44,25 +48,37 @@ bettingRouter.post('/storeBet', async (req, res) => {
                 res.status(200).send(responseHandler(true,200,'Success','Not enough balance.'));
             }
 
-            const payout = 1.95;
-
-           
-
+            const payoutValue = 1.95;
+            var now = new Date();
+            const createdDate = dateFormat(now, "yyyy-mm-d");
+            const createdTime = dateFormat(now, "H:MM:ss");
+            const  UUID = uuid4();
             
             // const payoutData = await findDynamicPayout(GameID,ruleID);
-           res.status(200).send(responseHandler(true,200,'Success','Betting.'));
+            
+            const BettingData = {
+                'gameID' : GameID,
+                'userID' : usedID,
+                'ruleID' : ruleID,
+                'betAmount' : betAmount,
+                'isBot' : BotValue,
+                'payout' : payoutValue,
+                'source' : 1,
+                'createdDate' : createdDate,
+                'createdTime' : createdTime,
+                'UUID' : UUID
+            }
 
+            console.log(BettingData);
+            res.status(200).send(responseHandler(true,200,'Success',BettingData));
         }else{           
             res.status(500).send(errorHandler(false, 500, 'Failed', 'Something Went Wrong. Please Check Your Filed.'));
         }
-
-
-        console.log(gameUUID);
         // const findProvider = await getPortalProvider(providerUUID);
         // return res.send(responseHandler(true, 200, 'Success', currencies));
-    } catch (error) {
-        console.log(error);
-        res.status(500).send(errorHandler(false, 500, 'Failed', 'Internal Server Error'));
+    }catch(error) {
+      console.log(error);
+      res.status(500).send(errorHandler(false, 500, 'Failed', 'Internal Server Error'));
     }
 });
 
