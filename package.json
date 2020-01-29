@@ -21,6 +21,7 @@
   "dependencies": {
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
+    "dateformat": "^3.0.3",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-validator": "^6.3.1",
@@ -29,7 +30,12 @@
     "multer": "^1.4.2",
     "mysql2": "^2.1.0",
     "sequelize": "^5.21.3",
+<<<<<<< HEAD
     "uuid": "^3.4.0"
+=======
+    "uuid": "^3.4.0",
+    "uuid4": "^1.1.4"
+>>>>>>> 4aa500f1e8801463e3efa4a1170067697d5a9951
   },
   "devDependencies": {
     "nodemon": "^2.0.2"
