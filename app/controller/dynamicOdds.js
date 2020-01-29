@@ -1,10 +1,12 @@
 const DynamicOdds = require('../models/dynamicOdds');
+const Rule = require('../models/rule');
 
-async function getDynamicPayout (ruleID) {
+async function findDynamicPayout (GameID,ruleID) {
     try {
-        const ruleMatch = await DynamicOdds.findOne({
+        const ruleMatch = await Rule.findOne({
             where: {
-                PID: ruleID
+                PID: ruleID,
+                isActive : 'active'
             },
             raw: true
         });
@@ -16,5 +18,5 @@ async function getDynamicPayout (ruleID) {
 }
 
 module.exports = {
-    getDynamicPayout
+    findDynamicPayout
 }

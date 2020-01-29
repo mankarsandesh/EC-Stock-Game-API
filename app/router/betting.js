@@ -3,6 +3,8 @@ const bettingRouter = express.Router();
 const {getRuleMatch} = require('../controller/rule');
 const {getGameMatch} = require('../controller/game');
 const {getUsersMatch} = require('../controller/user');
+const { findDynamicPayout } = require('../controller/dynamicOdds'); 
+const { getProviderGameMaster } = require('../controller/master'); 
 const {responseHandler, errorHandler} = require('../utils/utils');
 
 bettingRouter.post('/storeBet', async (req, res) => {
@@ -12,41 +14,46 @@ bettingRouter.post('/storeBet', async (req, res) => {
         if(gameUUID,userUUID,ruleID,betAmount){
             const findRule = await getRuleMatch(ruleID);
             const findGame = await getGameMatch(gameUUID);
-            const findUsers = await getUsersMatch(userUUID);
-              
-            const GameID = findGame.PID;
-            console.log(GameID);
-           
-
-            if(findRule){
-                if(findGame){
-                    if(findUsers){
-                        if((findUsers.portalProviderID != 1) && findUsers.portalProviderID != findGame.portalProviderID){
-                            res.status(200).send(responseHandler(true,200,'Invalid Game! Please contact your provider.'));
-                        }else{
-                            if(betAmount > findUsers.balance){
-                                res.status(200).send(responseHandler(true,200,'Success','Not enough balance.'));
-                            }else{
-                                res.status(200).send(responseHandler(true,200,'Success','Not enough balance.'));
-                            }                            
-                        }                        
-                    }else{
-                        res.status(500).send(errorHandler(false, 500, 'Failed', 'UserUID does not exist.'));
-                    }    
-                    
-                }else{
-                    res.status(500).send(errorHandler(false, 500, 'Failed', 'Game id does not exist.'));
-                }
-                
-            }else{
+            const userData = await getUsersMatch(userUUID);
+            
+            // check ruleID is valid or not
+            if(!findRule){               
                 res.status(500).send(errorHandler(false, 500, 'Failed', 'ruleID does not exist.'));
+            }
+
+            // check gameUUID is valid or not
+            if(!findGame){               
+                res.status(500).send(errorHandler(false, 500, 'Failed', 'Game id does not exist.'));  
+            }
+            // fetch GAME PID
+            const GameID = findGame.PID;
+            // check USER ID valid or not
+            if(!userData){
+                res.status(500).send(errorHandler(false, 500, 'Failed', 'UserUID does not exist.'));
             }
            
 
-        }else{            
+             //checking if user betting on game of his own Provider
+            const gameData = await getProviderGameMaster(gameUUID);
+           
+            if((userData.portalProviderID != 1) && userData.portalProviderID != gameData[0].portalProviderID){
+                res.status(500).send(errorHandler(false, 500, 'Failed', 'Invalid Game! Please contact your provider.'));               
+            }
+            // check users balance 
+            if(betAmount > userData.balance){
+                res.status(200).send(responseHandler(true,200,'Success','Not enough balance.'));
+            }
+
+            const payout = 1.95;
+
+           
+
             
+            // const payoutData = await findDynamicPayout(GameID,ruleID);
+           res.status(200).send(responseHandler(true,200,'Success','Betting.'));
+
+        }else{           
             res.status(500).send(errorHandler(false, 500, 'Failed', 'Something Went Wrong. Please Check Your Filed.'));
-        
         }
 
 
