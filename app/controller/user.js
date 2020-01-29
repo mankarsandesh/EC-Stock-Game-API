@@ -2,9 +2,6 @@ const User = require('../models/user');
 const uuidv4 = require('uuid/v4');
 const moment = require('moment');
 
-<<<<<<< HEAD
-async function storeUser ({portalProviderUserID, portalProviderID, userPolicyID, firstName=null, middleName=null, lastName=null, email=null, password=null, balance=0}) {
-=======
 async function deductUserBalance(userID,betAmount) {
     try {
         const updateUser = await User.update({balance : betAmount},{
@@ -19,8 +16,7 @@ async function deductUserBalance(userID,betAmount) {
     }
 }
 
-async function storeUser (data) {
->>>>>>> 4aa500f1e8801463e3efa4a1170067697d5a9951
+async function storeUser ({portalProviderUserID, portalProviderID, userPolicyID, firstName=null, middleName=null, lastName=null, email=null, password=null, balance=0}) {
     try {
         const user = await User.create({
             portalProviderUserID,

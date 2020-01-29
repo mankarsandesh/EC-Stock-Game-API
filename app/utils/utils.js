@@ -1,4 +1,4 @@
-function responseHandler (status=true, code=200, message='Success', data) {
+function successResponse (data, status=true, code=200, message='Success') {
     return {
         status,
         code,
@@ -16,7 +16,34 @@ function errorHandler (status=false, code, message, error) {
     }
 }
 
-function serverErrorHandler (status=false, code=500, message='Failed', error='Internal Server Error') {
+function serverError (status=false, code=500, message='Failed', error='Internal Server Error') {
+    return {
+        status,
+        code,
+        message,
+        error
+    }
+}
+
+function notFoundError (error='Not found', status=false, code=404, message='Failed') {
+    return {
+        status,
+        code,
+        message,
+        error
+    }
+}
+
+function badRequestError(error='Bad Request', status=false, code=400, message='Failed') {
+    return {
+        status,
+        code,
+        message,
+        error
+    }
+}
+
+function unauthorizedError (error='Unauthorized', status=false, code=401, message='Failed') {
     return {
         status,
         code,
@@ -27,7 +54,10 @@ function serverErrorHandler (status=false, code=500, message='Failed', error='In
 
 
 module.exports = {
-    responseHandler,
+    successResponse,
     errorHandler,
-    serverErrorHandler
+    serverError,
+    notFoundError,
+    badRequestError,
+    unauthorizedError
 }
