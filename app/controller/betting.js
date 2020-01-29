@@ -2,7 +2,7 @@ const Betting = require('../models/betting');
 
 async function storeBetting (gameUUID) {
     try {       
-        const checkGame = await Game.findOne({
+        const checkGame = await Betting.findOne({
             where: {
                 UUID: gameUUID,
                 gameStatus: 1

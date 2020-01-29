@@ -6,7 +6,7 @@ const {getUsersMatch,deductUserBalance} = require('../controller/user');
 const { findDynamicPayout } = require('../controller/dynamicOdds'); 
 const { getProviderGameMaster } = require('../controller/master'); 
 const {responseHandler, errorHandler} = require('../utils/utils');
-var uuid4 = require('uuid4');
+const uuid4 = require('uuid/v4');
 
 
 var dateFormat = require('dateformat');
@@ -52,7 +52,7 @@ bettingRouter.post('/storeBet', async (req, res) => {
             var now = new Date();
             const createdDate = dateFormat(now, "yyyy-mm-d");
             const createdTime = dateFormat(now, "H:MM:ss");
-            const UUID = uuid4();
+           
             
             // const payoutData = await findDynamicPayout(GameID,ruleID);
             
@@ -66,10 +66,10 @@ bettingRouter.post('/storeBet', async (req, res) => {
                 'source' : 1,
                 'createdDate' : createdDate,
                 'createdTime' : createdTime,
-                'UUID' : UUID
+                'UUID' : uuid4()
             }
             const userUpdateBalance = await deductUserBalance(usedID,betAmount);
-            const userBetting = await 
+           
             console.log(userUpdateBalance);            
             res.status(200).send(responseHandler(true,200,'Success',BettingData));
         }else{           
