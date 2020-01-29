@@ -5,8 +5,9 @@ const {getGameMatch} = require('../controller/game');
 const {getUsersMatch,deductUserBalance} = require('../controller/user');
 const { findDynamicPayout } = require('../controller/dynamicOdds'); 
 const { getProviderGameMaster } = require('../controller/master'); 
+const { storeBetting } = require('../controller/betting'); 
 const {responseHandler, errorHandler} = require('../utils/utils');
-var uuid4 = require('uuid4');
+const uuid4 = require('uuid/v4');
 
 
 var dateFormat = require('dateformat');
@@ -19,7 +20,7 @@ bettingRouter.post('/storeBet', async (req, res) => {
             const findGame = await getGameMatch(gameUUID);
             const userData = await getUsersMatch(userUUID);
             
-            const BotValue = 0;
+            const isBot = 0;
             
             // check ruleID is valid or not
             if(!findRule){               
@@ -31,12 +32,12 @@ bettingRouter.post('/storeBet', async (req, res) => {
                 res.status(500).send(errorHandler(false, 500, 'Failed', 'Game id does not exist.'));  
             }
             // fetch GAME PID
-            const GameID = findGame.PID;
+            const gameID = findGame.PID;
             // check USER ID valid or not
             if(!userData){
                 res.status(500).send(errorHandler(false, 500, 'Failed', 'UserUID does not exist.'));
             }
-            const usedID = userData.PID;
+            const userID = userData.PID;
              //checking if user betting on game of his own Provider
             const gameData = await getProviderGameMaster(gameUUID);
            
@@ -48,29 +49,31 @@ bettingRouter.post('/storeBet', async (req, res) => {
                 res.status(200).send(responseHandler(true,200,'Success','Not enough balance.'));
             }
 
-            const payoutValue = 1.95;
+            const payout = 1.95;
+            const source = 1;
             var now = new Date();
             const createdDate = dateFormat(now, "yyyy-mm-d");
             const createdTime = dateFormat(now, "H:MM:ss");
-            const UUID = uuid4();
+           
             
             // const payoutData = await findDynamicPayout(GameID,ruleID);
             
             const BettingData = {
-                'gameID' : GameID,
-                'userID' : usedID,
-                'ruleID' : ruleID,
-                'betAmount' : betAmount,
-                'isBot' : BotValue,
-                'payout' : payoutValue,
-                'source' : 1,
-                'createdDate' : createdDate,
-                'createdTime' : createdTime,
-                'UUID' : UUID
+                gameID,
+                userID,
+                ruleID,
+                betAmount,
+                isBot,
+                payout,
+                source,
+                createdDate,
+                createdTime,
+                'UUID' : uuid4()
             }
             const userUpdateBalance = await deductUserBalance(usedID,betAmount);
-            const userBetting = await 
-            console.log(userUpdateBalance);            
+            const betting = await storeBetting(BettingData);
+
+            console.log(betting);            
             res.status(200).send(responseHandler(true,200,'Success',BettingData));
         }else{           
             res.status(500).send(errorHandler(false, 500, 'Failed', 'Something Went Wrong. Please Check Your Filed.'));

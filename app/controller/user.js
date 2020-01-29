@@ -2,6 +2,10 @@ const User = require('../models/user');
 const uuidv4 = require('uuid/v4');
 const moment = require('moment');
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 61d632bf909f0c753dabf4903ee897c7445b7119
 async function deductUserBalance(userID,betAmount) {
     try {
         const updateUser = await User.update({balance : betAmount},{
@@ -78,4 +82,4 @@ module.exports = {
     getUser,
     getUsersMatch,
     deductUserBalance
-};
+}
