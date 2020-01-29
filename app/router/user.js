@@ -3,10 +3,11 @@ const userRouter = express.Router();
 const {getPortalProvider} = require('../controller/portalProvider');
 const {getUserPolicyById} = require('../controller/userPolicy');
 const {getUser, storeUser} = require('../controller/user');
-const {responseHandler, errorHandler} = require('../utils/utils');
+const {responseHandler, errorHandler, serverErrorHandler} = require('../utils/utils');
+const {validateUser, validate} = require('../middleware/validators/user');
 
 // User login
-userRouter.post('/user', async (req, res) => {
+userRouter.post('/users', validateUser(), validate, async (req, res) => {
     try {
         const userBody = req.body;
         const provider = await getPortalProvider(userBody.providerId);
@@ -21,6 +22,7 @@ userRouter.post('/user', async (req, res) => {
         if(isUser) {
             return res.status(400).send(errorHandler(false, 400, 'Failed', 'User already exists'));
         }
+        userBody.portalProviderID = provider.PID;
         const user = await storeUser(userBody);
         if(user.error) {
             return res.status(400).send(errorHandler(false, 400, 'Failed', user.error));
@@ -28,7 +30,7 @@ userRouter.post('/user', async (req, res) => {
         return res.send(responseHandler(true, 200, 'Success', user));
     } catch (error) {
         console.log(error);
-        res.status(500).send(errorHandler(false, 500, 'Failed', 'Internal Server Error'));
+        res.status(500).send(serverErrorHandler());
     }
 });
 

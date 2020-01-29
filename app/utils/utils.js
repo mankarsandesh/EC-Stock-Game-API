@@ -16,8 +16,18 @@ function errorHandler (status=false, code, message, error) {
     }
 }
 
+function serverErrorHandler (status=false, code=500, message='Failed', error='Internal Server Error') {
+    return {
+        status,
+        code,
+        message,
+        error
+    }
+}
+
 
 module.exports = {
     responseHandler,
-    errorHandler
+    errorHandler,
+    serverErrorHandler
 }
