@@ -1,16 +1,18 @@
 const User = require('../models/user');
 const uuidv4 = require('uuid/v4');
 const moment = require('moment');
-
+const db = require('../db/db');
+const { QueryTypes } = require('sequelize');
 
 async function deductUserBalance(userID,betAmount) {
     try {
-        const updateUser = await User.update({balance : betAmount},{
-            where : { 
-                PID : userID
-            }
+
+        const userBalance = await db.query('UPDATE user SET balance = balance - :Amount WHERE PID = :PID',
+        {
+          replacements: { Amount: betAmount, PID:userID},
+          type: QueryTypes.UPDATE
         });
-        return updateUser;
+        return userBalance;
     } catch (error) {
         console.log(error);
         return {error: error.errors[0].message}

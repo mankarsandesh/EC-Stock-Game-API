@@ -13,13 +13,11 @@ const uuid4 = require('uuid/v4');
 var dateFormat = require('dateformat');
 bettingRouter.post('/storeBet', async (req, res) => {
     try {
-
         const { gameUUID, userUUID, ruleID, betAmount,isBot } = req.body;      
         if(gameUUID,userUUID,ruleID,betAmount){
             const findRule = await getRuleMatch(ruleID);
             const findGame = await getGameMatch(gameUUID);
-            const userData = await getUsersMatch(userUUID);
-            
+            const userData = await getUsersMatch(userUUID);            
             const isBot = 0;
             
             // check ruleID is valid or not
@@ -55,9 +53,10 @@ bettingRouter.post('/storeBet', async (req, res) => {
             const createdDate = dateFormat(now, "yyyy-mm-d");
             const createdTime = dateFormat(now, "H:MM:ss");
            
-            
+            // Dynamic Payout will be Fetch
             // const payoutData = await findDynamicPayout(GameID,ruleID);
             
+            // store all bet value in BettingData
             const BettingData = {
                 gameID,
                 userID,
@@ -70,22 +69,22 @@ bettingRouter.post('/storeBet', async (req, res) => {
                 createdTime,
                 'UUID' : uuid4()
             }
-            const userUpdateBalance = await deductUserBalance(usedID,betAmount);
+
+            // store users betting
             const betting = await storeBetting(BettingData);
 
-            console.log(betting);            
+            // Update users New Balance
+            const userUpdateBalance = await deductUserBalance(userID,betAmount);
+
             res.status(200).send(responseHandler(true,200,'Success',BettingData));
         }else{           
             res.status(500).send(errorHandler(false, 500, 'Failed', 'Something Went Wrong. Please Check Your Filed.'));
         }
-        // const findProvider = await getPortalProvider(providerUUID);
-        // return res.send(responseHandler(true, 200, 'Success', currencies));
+      
     }catch(error) {
       console.log(error);
       res.status(500).send(errorHandler(false, 500, 'Failed', 'Internal Server Error'));
     }
 });
-
-
 
 module.exports = bettingRouter;
