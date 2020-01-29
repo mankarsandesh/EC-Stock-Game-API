@@ -1,6 +1,6 @@
 const express = require('express');
 const ruleRouter = express.Router();
-const {responseHandler, errorHandler} = require('../utils/utils');
+const { notFoundError, successResponse,serverError} = require('../utils/utils');
 const { getPortalProvider } = require('../controller/portalProvider');
 const { getAllGameRule } = require('../controller/rule'); 
 
@@ -9,14 +9,14 @@ ruleRouter.post('/getAllRules', async (req, res) => {
         const providerUUID = req.body.providerUUID;           
         const findProvider = await getPortalProvider(providerUUID);
          if(!findProvider){
-             console.log("no");
+            res.send(notFoundError('Provider Unable to Find.')); 
          }else{
             const allRule = await getAllGameRule();
-            res.send(responseHandler(true,200,'success',allRule)); 
+            res.send(successResponse(allRule)); 
          }
     } catch (error) {
         console.log(error);
-        res.status(500).send(errorHandler(false, 500, 'Failed', 'Internal Server Error'));
+        res.send(serverError());
     }
 });
 
