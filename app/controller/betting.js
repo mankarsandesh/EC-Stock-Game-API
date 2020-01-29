@@ -1,15 +1,9 @@
-const Betting = require('../models/betting');
+const BettingModel = require('../models/betting');
 
-async function storeBetting (gameUUID) {
+async function storeBetting (bettingData) {
     try {       
-        const checkGame = await Betting.findOne({
-            where: {
-                UUID: gameUUID,
-                gameStatus: 1
-            },
-            raw: true
-        });
-        return checkGame;
+        const Betting = await BettingModel.create(bettingData);
+        return Betting;
     } catch (error) {
         console.log(error);
         throw new Error();
