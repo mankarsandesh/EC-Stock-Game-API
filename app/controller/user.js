@@ -6,7 +6,6 @@ const { QueryTypes } = require('sequelize');
 
 async function deductUserBalance(userID,betAmount) {
     try {
-
         const userBalance = await db.query('UPDATE user SET balance = balance - :Amount WHERE PID = :PID',
         {
           replacements: { Amount: betAmount, PID:userID},
