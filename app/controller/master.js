@@ -14,7 +14,6 @@ async function getProviderGameMaster (gameUUID) {
         throw new Error();
     }
 }
-
 module.exports = {
     getProviderGameMaster
 }

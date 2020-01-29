@@ -1,5 +1,19 @@
 const User = require('../models/user');
 
+async function deductUserBalance(userID,betAmount) {
+    try {
+        const updateUser = await User.update({balance : betAmount},{
+            where : { 
+                PID : userID
+            }
+        });
+        return updateUser;
+    } catch (error) {
+        console.log(error);
+        return {error: error.errors[0].message}
+    }
+}
+
 async function storeUser (data) {
     try {
 
@@ -43,5 +57,6 @@ async function getUsersMatch (userUUID) {
 module.exports = {
     storeUser,
     getUser,
-    getUsersMatch
+    getUsersMatch,
+    deductUserBalance
 };

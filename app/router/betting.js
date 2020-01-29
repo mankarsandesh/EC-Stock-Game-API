@@ -2,7 +2,7 @@ const express = require('express');
 const bettingRouter = express.Router();
 const {getRuleMatch} = require('../controller/rule');
 const {getGameMatch} = require('../controller/game');
-const {getUsersMatch} = require('../controller/user');
+const {getUsersMatch,deductUserBalance} = require('../controller/user');
 const { findDynamicPayout } = require('../controller/dynamicOdds'); 
 const { getProviderGameMaster } = require('../controller/master'); 
 const {responseHandler, errorHandler} = require('../utils/utils');
@@ -52,7 +52,7 @@ bettingRouter.post('/storeBet', async (req, res) => {
             var now = new Date();
             const createdDate = dateFormat(now, "yyyy-mm-d");
             const createdTime = dateFormat(now, "H:MM:ss");
-            const  UUID = uuid4();
+            const UUID = uuid4();
             
             // const payoutData = await findDynamicPayout(GameID,ruleID);
             
@@ -68,8 +68,9 @@ bettingRouter.post('/storeBet', async (req, res) => {
                 'createdTime' : createdTime,
                 'UUID' : UUID
             }
-
-            console.log(BettingData);
+            const userUpdateBalance = await deductUserBalance(usedID,betAmount);
+            const userBetting = await 
+            console.log(userUpdateBalance);            
             res.status(200).send(responseHandler(true,200,'Success',BettingData));
         }else{           
             res.status(500).send(errorHandler(false, 500, 'Failed', 'Something Went Wrong. Please Check Your Filed.'));
