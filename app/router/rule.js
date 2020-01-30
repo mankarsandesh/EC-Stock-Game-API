@@ -10,10 +10,10 @@ ruleRouter.post('/getAllRules', async (req, res) => {
         const findProvider = await getPortalProvider(providerUUID);
          if(!findProvider){
             res.send(notFoundError('Provider Unable to Find.')); 
-         }else{
-            const allRule = await getAllGameRule();
-            res.send(successResponse(allRule)); 
          }
+        const allRule = await getAllGameRule();
+        res.send(successResponse(allRule)); 
+         
     } catch (error) {
         console.log(error);
         res.send(serverError());

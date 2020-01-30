@@ -5,55 +5,84 @@ const {getGameMatch} = require('../controller/game');
 const {getUsersMatch,deductUserBalance} = require('../controller/user');
 const { findDynamicPayout } = require('../controller/dynamicOdds'); 
 const { getProviderGameMaster } = require('../controller/master'); 
-const { storeBetting ,latestBetting } = require('../controller/betting'); 
+const { storeBetting ,getAllUserBetData,getAllProviderBetData } = require('../controller/betting'); 
+const { getPortalProvider } = require('../controller/portalProvider');
 const {successResponse, errorHandler,notFoundError,badRequestError} = require('../utils/utils');
 const uuid4 = require('uuid/v4');
 var dateFormat = require('dateformat');
 
 
 
-bettingRouter.get('/latestBet', async (req, res) => {
+// Fetch Current Running betting Data BetStatus  = -1
+bettingRouter.get('/getAllBets', async (req, res) => {
     try {
-        const BettingData = await latestBetting();
-        return res.send(successResponse(BettingData));
+        const { providerUUID, userUUID, limit, offset,status } = req.body;    
+        
+          
+        const providerData = await getPortalProvider(providerUUID);
+        // Portal provider UUID valid check
+        if(!providerData){               
+            res.status(404).send(notFoundError('providerUUID does not exist.'));
+        }
+        //User UUID valid check
+        if(!userUUID){
+            console.log("Yes");
+            console.log(providerData.PID);
+            // Fetch provider BET History            
+            const bettingData = await getAllProviderBetData(providerData.PID,limit,offset);
+            return res.send(successResponse(bettingData));
+        }else{
+            //User UUID valid check
+            const userData = await getUsersMatch(userUUID);
+            if(!userData){               
+                res.status(404).send(notFoundError('userUUID does not exist.'));
+            } 
+
+            // check if user belongs to the provider
+            if((userData.portalProviderID != 1) && userData.portalProviderID != providerData.PID){
+                res.status(400).send(badRequestError('Invalid Game! Please contact your provider.'));               
+            }
+            //Fetching User Bet History
+            const bettingData = await getAllUserBetData(providerData.PID,limit,offset,status);
+            return res.send(successResponse(bettingData));
+
+        }
     } catch (error) {
         console.log(error);
         res.status(500).send(serverError());
     }
 });
 
-
-
-
+// User can Betting Rule and Game ID wise
 bettingRouter.post('/storeBet', async (req, res) => {
     try {
         const { gameUUID, userUUID, ruleID, betAmount,isBot } = req.body;      
         if(gameUUID,userUUID,ruleID,betAmount){
-            const findRule = await getRuleMatch(ruleID);
-            const findGame = await getGameMatch(gameUUID);
+            const ruleData = await getRuleMatch(ruleID);
+            const gameData = await getGameMatch(gameUUID);
             const userData = await getUsersMatch(userUUID);            
             const isBot = 0;
             
             // check ruleID is valid or not
-            if(!findRule){               
+            if(!ruleData){               
                 res.status(404).send(notFoundError('ruleID does not exist.'));
             }
 
             // check gameUUID is valid or not
-            if(!findGame){               
+            if(!gameData){               
                 res.status(404).send(notFoundError('Game id does not exist.'));  
             }
             // fetch GAME PID
-            const gameID = findGame.PID;
+            const gameID = gameData.PID;
             // check USER ID valid or not
             if(!userData){
                 res.status(404).send(notFoundError('UserUID does not exist.'));
             }
             const userID = userData.PID;
              //checking if user betting on game of his own Provider
-            const gameData = await getProviderGameMaster(gameUUID);
+            const gamingData = await getProviderGameMaster(gameUUID);
            
-            if((userData.portalProviderID != 1) && userData.portalProviderID != gameData[0].portalProviderID){
+            if((userData.portalProviderID != 1) && userData.portalProviderID != gamingData[0].portalProviderID){
                 res.status(400).send(badRequestError('Invalid Game! Please contact your provider.'));               
             }
             // check users balance 
