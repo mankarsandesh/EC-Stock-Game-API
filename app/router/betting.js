@@ -26,10 +26,9 @@ bettingRouter.get('/getAllBets', async (req, res) => {
         }
         //User UUID valid check
         if(!userUUID){
-            console.log("Yes");
-            console.log(providerData.PID);
+           
             // Fetch provider BET History            
-            const bettingData = await getAllProviderBetData(providerData.PID,limit,offset);
+            const bettingData = await getAllProviderBetData(providerData.PID,limit,offset,status);
             return res.send(successResponse(bettingData));
         }else{
             //User UUID valid check
@@ -42,10 +41,10 @@ bettingRouter.get('/getAllBets', async (req, res) => {
             if((userData.portalProviderID != 1) && userData.portalProviderID != providerData.PID){
                 res.status(400).send(badRequestError('Invalid Game! Please contact your provider.'));               
             }
+            
             //Fetching User Bet History
-            const bettingData = await getAllUserBetData(providerData.PID,limit,offset,status);
+            const bettingData = await getAllUserBetData(userData.PID,limit,offset,status);
             return res.send(successResponse(bettingData));
-
         }
     } catch (error) {
         console.log(error);
