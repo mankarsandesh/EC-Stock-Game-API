@@ -1,18 +1,20 @@
 const express = require('express');
 const gameRouter = express.Router();
 const { notFoundError, successResponse,serverError} = require('../utils/utils');
-const { getPortalProvider ,getAllGameByProviderID } = require('../controller/portalProvider');
+const { getPortalProvider  } = require('../controller/portalProvider');
+const { getAllGameByProviderID } = require('../controller/game');
 
-
+// Get Game provider UUID wise
 gameRouter.post('/getGames', async (req, res) => {
     try {       
         const { providerUUID, limit, offset, status} = req.body;   
        
-        const findProvider = await getPortalProvider(providerUUID);
-         if(!findProvider){
+        const providerData = await getPortalProvider(providerUUID);
+        console.log(providerData);
+         if(!providerData){
             res.send(notFoundError('Provider UUID does not exist.')); 
          }
-        const response  = await getAllGameByProviderID(findProvider.PID,limit,offset,status);
+        const response  = await getAllGameByProviderID(providerData.PID,limit,offset,status);
         res.send(successResponse(response)); 
          
     } catch (error) {

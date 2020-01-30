@@ -2,15 +2,13 @@ const Game = require('../models/game');
 const { QueryTypes } = require('sequelize');
 const db = require('../db/db');
 
+// get all Provider Game Fetch
 async function getAllGameByProviderID (portalProviderID,limit=100,offset=0,status) {
     try {       
-        const Game = await db.query(`game.UUID as gameID,stock.name as stockName,game.startDate as gameStartDate,game.startTime as gameStartTime,game.endDate as gameEndDate,game.endTime as gameEndTime,game.gameStatus
-        inner join stock on game.stockID = stock.PID 
-        inner join providerGameSetup on game.providerGameSetupID = providerGameSetup.PID
-        inner join portalProvider on 
+        const Game = await db.query(`SELECT game.UUID as gameID,stock.name as stockName,game.startDate as gameStartDate,game.startTime as gameStartTime,game.endDate as gameEndDate,game.endTime as gameEndTime,game.gameStatus from game inner join stock on game.stockID = stock.PID inner join providerGameSetup on game.providerGameSetupID = providerGameSetup.PID inner join portalProvider on providerGameSetup.portalProviderID = portalProvider.PID WHERE portalProvider.isActive = 'active' AND providerGameSetup.portalProviderID = :portalProviderID AND game.gameStatus IN (:status) AND  portalProvider.deleted_at IS NULL LIMIT 0,10
         `,
         { 
-          replacements: { providerUUID: providerUUID,limit:limit,offset:offset,status:status },
+          replacements: { portalProviderID: portalProviderID,limit:limit,offset:offset,status:status },
           type: QueryTypes.SELECT
         });
         return Game;
@@ -20,24 +18,8 @@ async function getAllGameByProviderID (portalProviderID,limit=100,offset=0,statu
     }
 }
 
-
+// check gameUUID is found or not
 async function getGameMatch (gameUUID) {
-    try {       
-        const checkGame = await Game.findOne({
-            where: {
-                UUID: gameUUID,
-                gameStatus: 1
-            },
-            raw: true
-        });
-        return checkGame;
-    } catch (error) {
-        console.log(error);
-        throw new Error();
-    }
-}
-
-async function getProviderGameMatch (gameUUID) {
     try {       
         const checkGame = await Game.findOne({
             where: {
@@ -55,6 +37,5 @@ async function getProviderGameMatch (gameUUID) {
 
 module.exports = {
     getAllGameByProviderID,
-    getGameMatch,
-    getProviderGameMatch
+    getGameMatch   
 }
