@@ -10,23 +10,25 @@ const { getPortalProvider } = require('../controller/portalProvider');
 const {successResponse, errorHandler,notFoundError,badRequestError} = require('../utils/utils');
 const uuid4 = require('uuid/v4');
 var dateFormat = require('dateformat');
+const {validateBetting, validate} = require('../middleware/validators/betting');
 
 
 
 // Fetch Current Running betting Data BetStatus  = -1
-bettingRouter.get('/getAllBets', async (req, res) => {
+bettingRouter.post('/getAllBets', validateBetting(), validate, async (req, res) => {
     try {
-        const { providerUUID, userUUID, limit, offset,status } = req.body;    
+        const { providerUUID, userUUID, limit, offset,status} = req.body;    
         
-          
+        if(!status){
+            res.status(404).send(notFoundError('Status does not exist.'));
+        }  
         const providerData = await getPortalProvider(providerUUID);
         // Portal provider UUID valid check
         if(!providerData){               
             res.status(404).send(notFoundError('providerUUID does not exist.'));
         }
         //User UUID valid check
-        if(!userUUID){
-           
+        if(!userUUID){           
             // Fetch provider BET History            
             const bettingData = await getAllProviderBetData(providerData.PID,limit,offset,status);
             return res.send(successResponse(bettingData));
