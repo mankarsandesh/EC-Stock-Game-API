@@ -10,12 +10,12 @@ const { getPortalProvider } = require('../controller/portalProvider');
 const {successResponse, errorHandler,notFoundError,badRequestError} = require('../utils/utils');
 const uuid4 = require('uuid/v4');
 var dateFormat = require('dateformat');
-const {validateBetting, validate} = require('../middleware/validators/betting');
+const {validateGetBetting,validateBetting, validate} = require('../middleware/validators/betting');
 
 
 
 // Fetch Current Running betting Data BetStatus  = -1
-bettingRouter.post('/getAllBets', validateBetting(), validate, async (req, res) => {
+bettingRouter.post('/getAllBets', validateGetBetting(), validate, async (req, res) => {
     try {
         const { providerUUID, userUUID, limit, offset,status} = req.body;    
         
@@ -55,14 +55,14 @@ bettingRouter.post('/getAllBets', validateBetting(), validate, async (req, res) 
 });
 
 // User can Betting Rule and Game ID wise
-bettingRouter.post('/storeBet', async (req, res) => {
+bettingRouter.post('/storeBet', validateBetting(), validate, async (req, res) => {
     try {
-        const { gameUUID, userUUID, ruleID, betAmount,isBot } = req.body;      
-        if(gameUUID,userUUID,ruleID,betAmount){
+        const { gameUUID, userUUID, ruleID, betAmount,isBot=0 } = req.body;      
+      
             const ruleData = await getRuleMatch(ruleID);
             const gameData = await getGameMatch(gameUUID);
             const userData = await getUsersMatch(userUUID);            
-            const isBot = 0;
+            
             
             // check ruleID is valid or not
             if(!ruleData){               
@@ -121,9 +121,7 @@ bettingRouter.post('/storeBet', async (req, res) => {
             const userUpdateBalance = await deductUserBalance(userID,betAmount);
 
             res.status(200).send(successResponse(BettingData));
-        }else{           
-            res.status(500).send(errorHandler(false, 500, 'Failed', 'Something Went Wrong. Please Check Your Filed.'));
-        }
+        
       
     }catch(error) {
       console.log(error);
