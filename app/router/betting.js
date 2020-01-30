@@ -5,12 +5,26 @@ const {getGameMatch} = require('../controller/game');
 const {getUsersMatch,deductUserBalance} = require('../controller/user');
 const { findDynamicPayout } = require('../controller/dynamicOdds'); 
 const { getProviderGameMaster } = require('../controller/master'); 
-const { storeBetting } = require('../controller/betting'); 
+const { storeBetting ,latestBetting } = require('../controller/betting'); 
 const {successResponse, errorHandler,notFoundError,badRequestError} = require('../utils/utils');
 const uuid4 = require('uuid/v4');
-
-
 var dateFormat = require('dateformat');
+
+
+
+bettingRouter.get('/latestBet', async (req, res) => {
+    try {
+        const BettingData = await latestBetting();
+        return res.send(successResponse(BettingData));
+    } catch (error) {
+        console.log(error);
+        res.status(500).send(serverError());
+    }
+});
+
+
+
+
 bettingRouter.post('/storeBet', async (req, res) => {
     try {
         const { gameUUID, userUUID, ruleID, betAmount,isBot } = req.body;      
