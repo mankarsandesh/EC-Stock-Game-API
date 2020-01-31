@@ -94,7 +94,7 @@ bettingRouter.post('/storeBet', validateBetting(), validate, async (req, res) =>
             }
             // check users balance 
             if(betAmount > userData.balance){
-                res.status(200).send(responseHandler(true,200,'success','Not enough balance.'));
+                res.status(200).send(notFoundError('Not enough balance.'));
             }
 
             const payout = 1.95;
