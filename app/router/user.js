@@ -28,7 +28,7 @@ userRouter.post('/users', validateUser(), validate, async (req, res) => {
             return res.status(400).send(badRequestError(user.error));
         }
         return res.send(successResponse(user));
-    } catch (error) {
+    }catch(error){
         console.log(error);
         res.status(500).send(serverError());
     }

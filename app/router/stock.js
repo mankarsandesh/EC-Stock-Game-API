@@ -13,4 +13,16 @@ stockRouter.get('/getStockList', async (req, res) => {
     }
 });
 
+stockRouter.get('/stockAnalysis', async (req, res) => {
+    try {      
+        const stockList = await getAllStock();       
+        res.send(successResponse(stockList));                
+    } catch (error) {
+        console.log(error);
+        res.send(serverError());     
+    }
+});
+
+
+
 module.exports = stockRouter;
