@@ -1,5 +1,5 @@
 const {body, validationResult} = require('express-validator/check');
-
+const {notFoundError} = require('../../utils/utils');
 
 const validateUser = () => {
     return [
@@ -16,10 +16,7 @@ const validate = (req, res, next) => {
     }
     const extractedErrors = []
     errors.array().map(err => extractedErrors.push({ [err.param]: err.msg }))
-  
-    return res.status(422).send({
-      errors: extractedErrors,
-    })
+    res.status(404).send(notFoundError(extractedErrors));   
   }
 
 module.exports = {

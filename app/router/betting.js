@@ -63,7 +63,6 @@ bettingRouter.post('/storeBet', validateBetting(), validate, async (req, res) =>
             const gameData = await getGameMatch(gameUUID);
             const userData = await getUsersMatch(userUUID);            
             
-            
             // check ruleID is valid or not
             if(!ruleData){               
                 res.status(404).send(notFoundError('ruleID does not exist.'));
@@ -73,8 +72,10 @@ bettingRouter.post('/storeBet', validateBetting(), validate, async (req, res) =>
             if(!gameData){               
                 res.status(404).send(notFoundError('Game id does not exist.'));  
             }
+            
             // fetch GAME PID
             const gameID = gameData.PID;
+            
             // check USER ID valid or not
             if(!userData){
                 res.status(404).send(notFoundError('UserUID does not exist.'));
@@ -116,7 +117,6 @@ bettingRouter.post('/storeBet', validateBetting(), validate, async (req, res) =>
 
             // store users betting
             const betting = await storeBetting(BettingData);
-
             // Update users New Balance
             const userUpdateBalance = await deductUserBalance(userID,betAmount);
 
