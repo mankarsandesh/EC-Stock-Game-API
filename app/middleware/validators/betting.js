@@ -12,10 +12,10 @@ const validateBetting = () => {
       body('gameUUID', 'gameUUID is required').exists(),
       body('userUUID', 'userUUID is required').exists(),
       body('ruleID', 'ruleID is required').exists(), 
-      body('betAmount', 'betAmount is required').exists(),      
+      body('betAmount', 'betAmount is required').exists(),  
+      body('betAmount', 'betAmount Should be number.').isNumeric()      
   ]
 }
-
 
 const validate = (req, res, next) => {
     const errors = validationResult(req)
