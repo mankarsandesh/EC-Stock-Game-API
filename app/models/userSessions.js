@@ -1,15 +1,15 @@
-/* jshint indent: 2 */
+const DataTypes = require('sequelize');
+const db = require('../db/db');
 
-module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('userSessions', {
+const UserSessions = db.define('userSessions', {
     PID: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.BIGINT(20).UNSIGNED,
       allowNull: false,
       primaryKey: true,
       autoIncrement: true
     },
     userID: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.BIGINT(20).UNSIGNED,
       allowNull: false
     },
     userIpAddress: {
@@ -17,20 +17,24 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false
     },
     balance: {
-      type: "DOUBLE",
+      type: DataTypes.DOUBLE,
       allowNull: false
     },
-    created_at: {
+    createdAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: sequelize.fn('current_timestamp')
+      defaultValue: DataTypes.literal('CURRENT_TIMESTAMP()'),
+      field: 'created_at'
     },
-    updated_at: {
+    updatedAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: sequelize.fn('current_timestamp')
+      defaultValue: DataTypes.literal('CURRENT_TIMESTAMP()'),
+      field: 'updated_at'
     }
   }, {
-    tableName: 'userSessions'
-  });
-};
+    freezeTableName: true,
+    tableName: 'usersessions',
+});
+
+module.exports = UserSessions;
