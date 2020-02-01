@@ -7,7 +7,8 @@ const validateUser = () => {
         body('balance', 'Balance is required').exists(),
         body('balance', 'Balance Should be Number.').isNumeric(),
         body('portalProviderUserID', 'portalProviderUserID is required').exists(),
-        body('portalProviderUUID', 'portalProviderUUID is required').exists()
+        body('portalProviderUUID', 'portalProviderUUID is required').exists(),
+        body('portalProviderUUID', 'portalProviderUUID should be valid UUID').isUUID()
     ]
 }
 
@@ -18,8 +19,8 @@ const validate = (req, res, next) => {
     }
     const extractedErrors = []
     errors.array().map(err => extractedErrors.push({ [err.param]: err.msg }))
-    res.status(404).send(notFoundError(extractedErrors));   
-  }
+    res.status(400).send(notFoundError(extractedErrors));   
+}
 
 module.exports = {
     validateUser,
