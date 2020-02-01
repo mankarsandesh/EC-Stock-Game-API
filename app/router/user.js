@@ -14,6 +14,7 @@ userRouter.post('/users', validateUser(), validate, async (req, res) => {
         if(!provider) {
             return res.status(400).send(badRequestError('Invalid Portal provider Id'));
         }
+        userBody.portalProviderID = provider.PID;
         const isUser = await getUser(userBody.portalProviderUserID, userBody.portalProviderUUID);
         if(isUser) {
             const login = await userLogin(userBody.balance, isUser, provider);
