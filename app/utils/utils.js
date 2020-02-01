@@ -1,4 +1,4 @@
-function successResponse (data, status=true, code=200, message='Success') {
+function successResponse (data, status=true, code=200, message='success') {
     return {
         status,
         code,

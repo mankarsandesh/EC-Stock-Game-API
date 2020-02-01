@@ -16,6 +16,17 @@ stockRouter.get('/getStockList', async (req, res) => {
     }
 });
 
+stockRouter.get('/getStockListCheck', async (req, res) => {
+    try {      
+        const stockList = await getAllStock();       
+        res.send(successResponse(stockList));                
+    } catch (error) {
+        console.log(error);
+        res.send(serverError());     
+    }
+});
+
+
 stockRouter.post('/stockAnalysis', validateGetStock(), validate, async (req, res) => {
     try {     
         const userUUID =  req.body.userUUID;
