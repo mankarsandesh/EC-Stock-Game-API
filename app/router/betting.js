@@ -17,6 +17,7 @@ const {validateGetBetting,validateBetting, validate} = require('../middleware/va
 // Fetch Current Running betting Data BetStatus  = -1
 bettingRouter.post('/getAllBets', validateGetBetting(), validate, async (req, res) => {
     try {
+        
         const { providerUUID, userUUID, limit, offset,status} = req.body;    
         
         if(!status){
@@ -57,12 +58,23 @@ bettingRouter.post('/getAllBets', validateGetBetting(), validate, async (req, re
 // User can Betting Rule and Game ID wise
 bettingRouter.post('/storeBet', validateBetting(), validate, async (req, res) => {
     try {
-        const { gameUUID, userUUID, ruleID, betAmount,isBot=0 } = req.body;      
-      
+            const { gameUUID, userUUID, ruleID, betAmount,isBot=0 } = req.body;      
+            const userAgent  = req.headers['user-agent']; 
             const ruleData = await getRuleMatch(ruleID);
             const gameData = await getGameMatch(gameUUID);
             const userData = await getUsersMatch(userUUID);
-
+            if(userAgent.includes('Postman')){
+                source =  1;
+            }else if(userAgent.includes('Chrome')){
+                source =  2;
+            }else if(userAgent.includes('iPhone')){
+                source =  3;
+            }else if(userAgent.includes('Android')){
+                source =  4;
+            }else{
+                source = 1;
+            }   
+            
             // check ruleID is valid or not
             if(!ruleData){               
                 res.status(404).send(notFoundError('ruleID does not exist.'));
@@ -92,8 +104,7 @@ bettingRouter.post('/storeBet', validateBetting(), validate, async (req, res) =>
                 res.status(200).send(notFoundError('Not enough balance.'));
             }
 
-            const payout = 1.95;
-            const source = 1;
+            const payout = 1.95;            
             var now = new Date();
             const createdDate = dateFormat(now, "yyyy-mm-d");
             const createdTime = dateFormat(now, "H:MM:ss");
@@ -109,7 +120,7 @@ bettingRouter.post('/storeBet', validateBetting(), validate, async (req, res) =>
                 betAmount,
                 isBot,
                 payout,
-                source,
+                source ,
                 createdDate,
                 createdTime,
                 'UUID' : uuid4()

@@ -24,6 +24,9 @@ const port = process.env.PORT || 5005;
 app.use(bodyParser.json());
 app.use(upload.array());
 
+var device = require('express-device');
+app.use(device.capture());
+
 //CORS configuration
 const corsOptions = {
     origin: '*',

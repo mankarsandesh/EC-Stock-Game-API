@@ -6,9 +6,10 @@ const {getUsersMatch} = require('../controller/user');
 const {validateGetStock, validate} = require('../middleware/validators/stock');
 
 
+
 stockRouter.get('/getStockList', async (req, res) => {
     try {      
-        const stockList = await getAllStock();       
+        const stockList = await getAllStock();        
         res.send(successResponse(stockList));                
     } catch (error) {
         console.log(error);
