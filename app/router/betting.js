@@ -63,6 +63,7 @@ bettingRouter.post('/storeBet', validateBetting(), validate, async (req, res) =>
             const ruleData = await getRuleMatch(ruleID);
             const gameData = await getGameMatch(gameUUID);
             const userData = await getUsersMatch(userUUID);
+            
             if(userAgent.includes('Postman')){
                 source =  1;
             }else if(userAgent.includes('Chrome')){
