@@ -18,11 +18,12 @@ async function deductUserBalance(userID,betAmount) {
     }
 }
 
-async function storeUser ({portalProviderUserID, portalProviderID, userPolicyID, firstName=null, middleName=null, lastName=null, email=null, password=null, balance=0}) {
+async function storeUser ({portalProviderUserID, portalProviderUUID, userPolicyID=1, firstName=null, middleName=null, lastName=null, email=null, password=null, balance=0}) {
     try {
+        console.log(portalProviderUUID, '----------------------')
         const user = await User.create({
             portalProviderUserID,
-            portalProviderID,
+            portalProviderID: portalProviderUUID,
             userPolicyID,
             firstName,
             middleName,

@@ -4,11 +4,11 @@ const {notFoundError} = require('../../utils/utils');
 // validation all filed in user filed
 const validateUser = () => {
     return [
-        body('balance', 'Balance is required').exists(),
-        body('balance', 'Balance Should be Number.').isNumeric(),
+        body('balance', 'Balance is required').exists().trim(),
+        body('balance', 'Balance Should be a positive number').isInt({gt: 0}),
         body('portalProviderUserID', 'portalProviderUserID is required').exists(),
         body('portalProviderUUID', 'portalProviderUUID is required').exists(),
-        body('portalProviderUUID', 'portalProviderUUID should be valid UUID').isUUID()
+        body('portalProviderUUID', 'portalProviderUUID should be valid UUID').isUUID().trim()
     ]
 }
 
