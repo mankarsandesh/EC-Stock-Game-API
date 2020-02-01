@@ -57,7 +57,7 @@ const PortalProvider = db.define('portalProvider', {
     }
   }, {
     freezeTableName: true,
-    tableName: 'portalprovider'
+    tableName: 'portalProvider'
 });
 
 module.exports = PortalProvider;

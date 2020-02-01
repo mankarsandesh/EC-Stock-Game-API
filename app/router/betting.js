@@ -61,12 +61,7 @@ bettingRouter.post('/storeBet', validateBetting(), validate, async (req, res) =>
       
             const ruleData = await getRuleMatch(ruleID);
             const gameData = await getGameMatch(gameUUID);
-            const userData = await getUsersMatch(userUUID);            
-            
-            // betAmount should be greater than 0
-            if(!(betAmount > 0)){               
-                res.status(404).send(notFoundError('betAmount should be greater than 0.'));
-            }
+            const userData = await getUsersMatch(userUUID);
 
             // check ruleID is valid or not
             if(!ruleData){               
