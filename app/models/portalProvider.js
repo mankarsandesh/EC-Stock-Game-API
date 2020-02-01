@@ -32,7 +32,6 @@ const PortalProvider = db.define('portalProvider', {
     UUID: {
       type: DataTypes.STRING(255),
       allowNull: false,
-      defaultValue: db.fn('uuid'),
       unique: true
     },
     isActive: {

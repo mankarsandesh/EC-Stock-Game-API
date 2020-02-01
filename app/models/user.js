@@ -96,7 +96,6 @@ const User = db.define('user', {
     UUID: {
       type: DataTypes.STRING(255),
       allowNull: false,
-      defaultValue: DataTypes.fn('uuid'),
       unique: true
     },
     createdAt: {

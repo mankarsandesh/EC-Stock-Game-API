@@ -53,7 +53,6 @@ const db = require('../db/db');
     UUID: {
       type: DataTypes.STRING(255),
       allowNull: false,
-      defaultValue: DataTypes.fn('uuid'),
       unique: true
     },
     createdAt: {
