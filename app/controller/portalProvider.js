@@ -3,6 +3,7 @@ const Sequelize = require('sequelize');
 
 async function getPortalProvider (providerUUID) {
     try {
+        console.log(providerUUID, '--------------------------');
         const provider = await PortalProvider.findOne({
             where: {UUID: providerUUID},
             raw : true

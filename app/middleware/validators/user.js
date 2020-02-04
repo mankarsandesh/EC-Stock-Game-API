@@ -19,6 +19,15 @@ const validateUserLogout = () => {
     ]
 }
 
+const validateGetUser = () => {
+    return [
+        query('userUUID', 'userUUID is required').exists(),
+        query('userUUID', 'Invalid userUUID').isUUID(),
+        query('portalProviderUUID', 'portalProviderUUID is required').exists(),
+        query('portalProviderUUID', 'portalProviderUUID should be valid UUID').isUUID().trim()
+    ]
+}
+
 const validate = (req, res, next) => {
     const errors = validationResult(req)
     if (errors.isEmpty()) {
@@ -32,5 +41,6 @@ const validate = (req, res, next) => {
 module.exports = {
     validateUserLogin,
     validateUserLogout,
+    validateGetUser,
     validate
 }

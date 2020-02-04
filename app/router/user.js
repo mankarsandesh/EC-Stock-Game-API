@@ -1,10 +1,9 @@
 const express = require('express');
 const userRouter = express.Router();
 const {getPortalProvider} = require('../controller/portalProvider');
-const {getUserPolicyById} = require('../controller/userPolicy');
-const {getUser, storeUser, userLogin, logoutUser} = require('../controller/user');
+const {getUser, storeUser, userLogin, logoutUser, getUserDetails} = require('../controller/user');
 const {successResponse, serverError, badRequestError} = require('../utils/utils');
-const {validateUserLogin, validateUserLogout, validate} = require('../middleware/validators/user');
+const {validateUserLogin, validateUserLogout, validateGetUser, validate} = require('../middleware/validators/user');
 
 // User login
 userRouter.post('/users/login', validateUserLogin(), validate, async (req, res) => {
@@ -56,6 +55,21 @@ userRouter.get('/users/logout', validateUserLogout(), validate, async (req, res)
     } catch (error) {
         console.log(error);
         res.status(500).send(serverError());
+    }
+});
+
+userRouter.get('/users', validateGetUser(), validate, async (req, res) => {
+    try {
+        const portalProviderUUID = req.query.portalProviderUUID;
+        const userUUID = req.query.userUUID;
+        const user = await getUserDetails(portalProviderUUID, userUUID);
+        if (user.error) {
+            return res.status(400).send(badRequestError(user.error));
+        }
+        return res.send(successResponse(user));
+    } catch (error) {
+        console.log(error);
+        throw new Error();
     }
 });
 

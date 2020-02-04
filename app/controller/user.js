@@ -4,7 +4,7 @@ const Sequelize = require('sequelize');
 const moment = require('moment');
 const db = require('../db/db');
 const { QueryTypes } = require('sequelize');
-const {decreaseMainBalance, increaseMainBalance, increaseCreditBalance, decreaseCreditBalance, getActivePortalProvider, getPortalProviderByPID} = require('../controller/portalProvider');
+const {decreaseMainBalance, increaseMainBalance, increaseCreditBalance, decreaseCreditBalance, getPortalProvider, getActivePortalProvider, getPortalProviderByPID} = require('../controller/portalProvider');
 const {storeSession, getUserSessionByPID, deleteUserSessionByPID} = require('../controller/userSessions');
 
 async function deductUserBalance(userID,betAmount) {
@@ -103,7 +103,6 @@ async function logoutUser (userUUID) {
         }
         const updateUser = await User.update({
             isLoggedIn: 'false',
-            canLogout: 'false',
             logoutTime: moment(Date.now()).format('YYYY-MM-DD HH:mm:ss'),
             activeMinutes: moment(Date.now()).format('YYYY-MM-DD HH:mm:ss'),
             balance: Sequelize.literal(`balance - ${user.balance}`)
@@ -163,6 +162,32 @@ async function getUser(portalProviderUserID, portalProviderID) {
     }
 }
 
+async function getUserDetails(portalProviderUUID, userUUID) {
+    try {
+        const provider = await getPortalProvider(portalProviderUUID);
+        if(!provider) {
+            return {error: 'Portal provider with given UUID does not exist'}
+        }
+        const user = await User.findOne({
+            where: {
+                UUID: userUUID
+            },
+            attributes: ['PID','loginTime','portalProviderID','userPolicyID','firstName','lastName','email','profileImage','balance','isLoggedIn','isActive'],
+            raw: true
+        });
+        if(!user) {
+            return {error: 'User does not exist'}
+        }
+        if(user.portalProviderID != 1 && user.portalProviderID != provider.PID) {
+            return {error: 'Invalid Request! Please contact your provider'}
+        }
+        return user;
+    } catch (error) {
+        console.log(error);
+        throw new Error();
+    }
+}
+
 async function getUsersMatch (userUUID) {
     try {       
         const checkUsers = await User.findOne({
@@ -185,5 +210,6 @@ module.exports = {
     increaseUserBalance,
     getUser,
     getUsersMatch,
-    deductUserBalance
+    deductUserBalance,
+    getUserDetails
 }
