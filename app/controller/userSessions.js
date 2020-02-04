@@ -14,6 +14,42 @@ async function storeSession (userPID, userIpAddress, balance) {
     }
 }
 
+async function getUserSessionByPID (userPID) {
+    try {
+        const userSession = await UserSessions.findOne({
+            where: {
+                userID: userPID
+            },
+            raw: true
+        });
+        return userSession;
+    } catch (error) {
+        console.log(error);
+        throw new Error();
+    }
+}
+
+async function deleteUserSessionByPID (userPID) {
+    try {
+        const deleteSession = await UserSessions.destroy({
+            where: {
+                userID: userPID
+            },
+            raw: true
+        });
+        if (deleteSession) {
+            return true;
+        } else {
+            throw new Error();
+        }
+    } catch (error) {
+        console.log(error);
+        throw new Error();
+    }
+}
+
 module.exports = {
-    storeSession
+    storeSession,
+    getUserSessionByPID,
+    deleteUserSessionByPID
 }

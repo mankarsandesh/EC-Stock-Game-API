@@ -1,11 +1,11 @@
 const User = require('../models/user');
-const UserSessions = require('../models/userSessions');
 const uuidv4 = require('uuid/v4');
+const Sequelize = require('sequelize');
 const moment = require('moment');
 const db = require('../db/db');
 const { QueryTypes } = require('sequelize');
-const {decreaseMainBalance} = require('../controller/portalProvider');
-const {storeSession} = require('../controller/userSessions');
+const {decreaseMainBalance, increaseMainBalance, increaseCreditBalance, decreaseCreditBalance, getActivePortalProvider, getPortalProviderByPID} = require('../controller/portalProvider');
+const {storeSession, getUserSessionByPID, deleteUserSessionByPID} = require('../controller/userSessions');
 
 async function deductUserBalance(userID,betAmount) {
     try {
@@ -40,7 +40,6 @@ async function storeUser ({portalProviderUserID, portalProviderID, userPolicyID=
         }, { 
             raw: true
         });
-        console.log(user);
         return user.dataValues;
     } catch (error) {
         console.log(error);
@@ -51,17 +50,12 @@ async function storeUser ({portalProviderUserID, portalProviderID, userPolicyID=
 async function userLogin(balance, user, provider) {
     try {
         if(provider.mainBalance >= balance && provider.isActive=='active' && user.isActive =='active' || provider.name == 'TNKMaster') {
-            const userSession = await UserSessions.findOne({
-                where: {
-                    userID: user.UUID
-                },
-                raw: true
-            });
+            const userSession = await getUserSessionByPID(user.PID);
             if(userSession) {
                 return {error: 'User already have a session. Please wait for 5 minutes'}
             }
-            await decreaseMainBalance(balance, provider.UUID);
-            await increaseUserBalance(balance, user.UUID);
+            await decreaseMainBalance(balance, provider.PID);
+            await increaseUserBalance(balance, user.PID);
             await User.update({
                 isLoggedIn: true,
                 loginTime: moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')
@@ -71,10 +65,10 @@ async function userLogin(balance, user, provider) {
                 },
                 raw: true
             });
-            const session = await storeSession(user.PID, user.lastIP, balance);
+            await storeSession(user.PID, user.lastIP, balance);
             return 'User Successfully logged in';
         } else {
-            return {error: 'Login not permitted'}
+            return {error: 'Login not permitted: Insufficient funds in portal provider balance'}
         }
     } catch (error) {
         console.log(error);
@@ -82,15 +76,56 @@ async function userLogin(balance, user, provider) {
     }
 }
 
-async function increaseUserBalance (balance, UUID) {
+async function logoutUser (userUUID) {
     try {
-        const user = await User.findOne({ 
-            where: { UUID },
+        const user = await User.findOne({
+            where: {
+                UUID: userUUID
+            },
             raw: true
         });
-        console.log(user);
-        const increaseBalance = await User.update({ balance: parseInt(user.balance) + parseInt(balance)}, {
-            where: { UUID },
+        if(!user) {
+            return {error: 'Invalid User'}
+        }
+        const userSession = await getUserSessionByPID(user.PID);
+        if(!userSession) {
+            return {error: 'User session not available'}
+        }
+        if(user.balance > userSession.balance) {
+            const winningAmount = user.balance - userSession.balance;
+            const provider = await getActivePortalProvider(user.portalProviderID);
+            await increaseMainBalance(user.balance, provider.PID);
+            await increaseCreditBalance(winningAmount, provider.PID);
+        } else {
+            const losingAmount = user.balance - userSession.balance;
+            const provider = await getActivePortalProvider(user.portalProviderID);
+            await increaseMainBalance(user.balance, provider.PID);
+            await decreaseCreditBalance(losingAmount, provider.PID);
+        }
+        const updateUser = await User.update({
+            isLoggedIn: 'false',
+            canLogout: 'false',
+            logoutTime: moment(Date.now()).format('YYYY-MM-DD HH:mm:ss'),
+            activeMinutes: moment(Date.now()).format('YYYY-MM-DD HH:mm:ss'),
+            balance: Sequelize.literal(`balance - ${user.balance}`)
+        }, {
+            where: {
+                PID: user.PID
+            },
+            raw: true
+        });
+        await deleteUserSessionByPID(user.PID);
+        return 'User logged out successfully';
+    } catch (error) {
+        console.log(error);
+        throw new Error();
+    }
+}
+
+async function increaseUserBalance (balance, userPID) {
+    try {
+        const increaseBalance = await User.update({ balance: Sequelize.literal(`balance + ${parseInt(balance)}`) }, {
+            where: { PID: userPID },
             raw: true
         });
         if(increaseBalance) {
@@ -104,7 +139,7 @@ async function increaseUserBalance (balance, UUID) {
     }
 }
 
-// async function getUserById (UUID) {
+// async function getUserById (userUUID) {
 //     try {
         
 //     } catch (error) {
@@ -147,6 +182,7 @@ async function getUsersMatch (userUUID) {
 module.exports = {
     storeUser,
     userLogin,
+    logoutUser,
     increaseUserBalance,
     getUser,
     getUsersMatch,
