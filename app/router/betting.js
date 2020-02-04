@@ -11,12 +11,13 @@ const {successResponse, errorHandler,notFoundError,badRequestError} = require('.
 const uuid4 = require('uuid/v4');
 var dateFormat = require('dateformat');
 const {validateGetBetting,validateBetting, validate} = require('../middleware/validators/betting');
-
+const sourceRequest = require('../middleware/source/source');
 
 
 // Fetch Current Running betting Data BetStatus  = -1
 bettingRouter.post('/getAllBets', validateGetBetting(), validate, async (req, res) => {
     try {
+        
         const { providerUUID, userUUID, limit, offset,status} = req.body;    
         
         if(!status){
@@ -55,10 +56,9 @@ bettingRouter.post('/getAllBets', validateGetBetting(), validate, async (req, re
 });
 
 // User can Betting Rule and Game ID wise
-bettingRouter.post('/storeBet', validateBetting(), validate, async (req, res) => {
+bettingRouter.post('/storeBet',sourceRequest, validateBetting(), validate, async (req, res) => {
     try {
-        const { gameUUID, userUUID, ruleID, betAmount,isBot=0 } = req.body;      
-      
+            const { gameUUID, userUUID, ruleID, betAmount,isBot=0 } = req.body;      
             const ruleData = await getRuleMatch(ruleID);
             const gameData = await getGameMatch(gameUUID);
             const userData = await getUsersMatch(userUUID);
@@ -92,8 +92,7 @@ bettingRouter.post('/storeBet', validateBetting(), validate, async (req, res) =>
                 res.status(200).send(notFoundError('Not enough balance.'));
             }
 
-            const payout = 1.95;
-            const source = 1;
+            const payout = 1.95;            
             var now = new Date();
             const createdDate = dateFormat(now, "yyyy-mm-d");
             const createdTime = dateFormat(now, "H:MM:ss");
@@ -119,9 +118,7 @@ bettingRouter.post('/storeBet', validateBetting(), validate, async (req, res) =>
             const betting = await storeBetting(BettingData);
             // Update users New Balance
             const userUpdateBalance = await deductUserBalance(userID,betAmount);
-
-            res.status(200).send(successResponse(BettingData));
-        
+            res.status(200).send(successResponse(BettingData));       
       
     }catch(error) {
       console.log(error);

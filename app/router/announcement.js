@@ -2,6 +2,9 @@ const express = require('express');
 const announcementRouter = express.Router();
 const {getAllAnnouncements, storeAnnouncement, getAnnouncementById, updateAnnouncementById} = require('../controller/announcement');
 const {successResponse, badRequestError, notFoundError, serverError} = require('../utils/utils');
+const { getPortalProvider } = require('../controller/portalProvider');
+const {validateAnnouncement, validate} = require('../middleware/validators/announcement');
+
 
 // Get All Announcements
 announcementRouter.get('/announcement', async (req, res) => {
@@ -15,9 +18,16 @@ announcementRouter.get('/announcement', async (req, res) => {
 });
 
 // Create Announcement
-announcementRouter.post('/announcement', async (req, res) => {
+announcementRouter.post('/announcement',validateAnnouncement(),validate, async (req, res) => {
     try {
-        const announcement = await storeAnnouncement(req.body);
+        
+        const userBody = req.body;
+        const providerData = await getPortalProvider(req.body.providerUUID);
+        // Portal provider UUID valid check
+        if(!providerData){               
+            res.status(404).send(notFoundError('providerUUID does not exist.'));
+        }
+        const announcement = await storeAnnouncement(userBody);
         if(announcement.error) {
             return res.status(400).send(badRequestError(announcement.error));
         }

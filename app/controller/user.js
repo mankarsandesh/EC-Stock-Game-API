@@ -20,7 +20,6 @@ async function deductUserBalance(userID,betAmount) {
         return {error: error.errors[0].message}
     }
 }
-
 async function storeUser ({portalProviderUserID, portalProviderID, userPolicyID=1, firstName=null, middleName=null, lastName=null, email=null, password=null, balance=0}) {
     try {
         const user = await User.create({

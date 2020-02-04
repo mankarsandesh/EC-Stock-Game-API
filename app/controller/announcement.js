@@ -21,7 +21,7 @@ async function storeAnnouncement (data) {
         if(error.name == 'SequelizeUniqueConstraintError') {      // If the announcement already exists
             return {error: 'Announcement already exists'}
         } else if(error.name == 'SequelizeValidationError') {     // If the invalid data is passed
-            return {error: error.errors[0].message}
+            return { error: error.errors[0].message}
         } 
         else {
             console.log(error);
