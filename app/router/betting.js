@@ -118,9 +118,7 @@ bettingRouter.post('/storeBet',sourceRequest, validateBetting(), validate, async
             const betting = await storeBetting(BettingData);
             // Update users New Balance
             const userUpdateBalance = await deductUserBalance(userID,betAmount);
-
-            res.status(200).send(successResponse(BettingData));
-        
+            res.status(200).send(successResponse(BettingData));       
       
     }catch(error) {
       console.log(error);
