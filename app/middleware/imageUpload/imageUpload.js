@@ -24,10 +24,12 @@ const uploadImage = async (req, res, next) => {
         if(!user) {
             return res.status(404).send('User does not exist');
         }
-        if(!req.file) {
-            next();
+        if(req.fileError) {
+            return res.status(400).send(badRequestError(req.fileError));
         }
-        console.log(req.file);
+        if(!req.file) {
+            return next();
+        }
         const buffer = await sharp(req.file.buffer).resize({ height: 480, width: 360 }).png().toBuffer();
         const pictureId = uuid4();
         if(user.profileImage) {
@@ -50,7 +52,7 @@ const uploadImage = async (req, res, next) => {
                     raw: true
                 });
                 if(updated) {
-                    next();
+                    return next();
                 } else {
                     res.status(500).send(serverError(false, 500, 'Profile picture not updated'));
                 }
@@ -70,7 +72,7 @@ const uploadImage = async (req, res, next) => {
                     raw: true
                 });
                 if(updated) {
-                    next();
+                    return next();
                 } else {
                     res.status(500).send(serverError(false, 500, 'Profile picture not updated'));
                 }

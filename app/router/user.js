@@ -14,6 +14,7 @@ const upload = multer({
     },
     fileFilter(req, file, cb) {
         if(!file.originalname.match(/.(jpg|jpeg|png|svg)$/)) {
+            req.fileError = 'Please upload a jpg, jpeg, png or svg image file';
             return cb(null, false);
         }
         cb(undefined, true);
