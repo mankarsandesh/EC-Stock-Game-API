@@ -2,6 +2,8 @@ const User = require('../models/user');
 const uuidv4 = require('uuid/v4');
 const Sequelize = require('sequelize');
 const moment = require('moment');
+const sharp = require('sharp');
+const fs = require('fs');
 const db = require('../db/db');
 const { QueryTypes } = require('sequelize');
 const {decreaseMainBalance, increaseMainBalance, increaseCreditBalance, decreaseCreditBalance, getPortalProvider, getActivePortalProvider, getPortalProviderByPID} = require('../controller/portalProvider');
@@ -203,6 +205,26 @@ async function getUsersMatch (userUUID) {
     }
 }
 
+async function updateUser (userUUID, data) {
+    try {
+        const update = await User.update(data, {
+            where: {
+                UUID: userUUID
+            },
+            raw: true
+        });
+        if(update) {
+            const updatedUser = await getUsersMatch(userUUID);
+            return updatedUser;
+        } else {
+            return { error: 'User details not updated successfully' }
+        }
+    } catch (error) {
+        console.log(error);
+        throw new Error();
+    }
+}
+
 module.exports = {
     storeUser,
     userLogin,
@@ -211,5 +233,6 @@ module.exports = {
     getUser,
     getUsersMatch,
     deductUserBalance,
-    getUserDetails
+    getUserDetails,
+    updateUser
 }

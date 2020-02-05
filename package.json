@@ -32,6 +32,7 @@
     "mysql2": "^2.1.0",
     "node-device-detector": "^1.1.9",
     "sequelize": "^5.21.3",
+    "sharp": "^0.24.0",
     "uuid": "^3.4.0"
   },
   "devDependencies": {

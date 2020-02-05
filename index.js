@@ -1,8 +1,8 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
-const multer = require('multer');
-const upload = multer();
+// const multer = require('multer');
+// const upload = multer();
 
 // Load all environment variables
 require('dotenv').config();
@@ -22,7 +22,7 @@ const gameRouter = require('./app/router/game');
 const bodyParser = require('body-parser');
 const port = process.env.PORT || 5005;
 app.use(bodyParser.json());
-app.use(upload.array());
+// app.use(upload.array());
 
 var device = require('express-device');
 app.use(device.capture());
