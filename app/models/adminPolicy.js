@@ -1,9 +1,9 @@
-/* jshint indent: 2 */
+const DataTypes = require('sequelize');
+const db = require('../db/db');
 
-module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('adminPolicy', {
+const AdminPolicy = db.define('adminPolicy', {
     PID: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.BIGINT(20),
       allowNull: false,
       primaryKey: true,
       autoIncrement: true
@@ -35,7 +35,7 @@ module.exports = function(sequelize, DataTypes) {
       defaultValue: 'true'
     },
     source: {
-      type: DataTypes.INTEGER(4),
+      type: DataTypes.TINYINT(4),
       allowNull: false
     },
     isActive: {
@@ -43,21 +43,26 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       defaultValue: 'active'
     },
-    created_at: {
+    createdAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: sequelize.fn('current_timestamp')
+      defaultValue: DataTypes.literal('CURRENT_TIMESTAMP()'),
+      field: 'created_at'
     },
-    updated_at: {
+    updatedAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: sequelize.fn('current_timestamp')
+      defaultValue: DataTypes.literal('CURRENT_TIMESTAMP()'),
+      field: 'updated_at'
     },
     deleted_at: {
       type: DataTypes.DATE,
       allowNull: true
     }
   }, {
+    freezeTableName: true,
     tableName: 'adminPolicy'
-  });
-};
+});
+
+module.exports = AdminPolicy;
+

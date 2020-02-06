@@ -1,15 +1,15 @@
-/* jshint indent: 2 */
+const DataTypes = require('sequelize');
+const db = require('../db/db');
 
-module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('admin', {
+const Admin = db.define('admin', {
     PID: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.BIGINT(20),
       allowNull: false,
       primaryKey: true,
       autoIncrement: true
     },
     adminPolicyID: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.BIGINT(20),
       allowNull: false,
       references: {
         model: 'adminPolicy',
@@ -17,7 +17,7 @@ module.exports = function(sequelize, DataTypes) {
       }
     },
     portalProviderID: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.BIGINT(20),
       allowNull: false,
       references: {
         model: 'portalProvider',
@@ -47,39 +47,43 @@ module.exports = function(sequelize, DataTypes) {
       unique: true
     },
     password: {
-      type: "BLOB",
+      type: DataTypes.BLOB,
       allowNull: false
     },
     invalidAttemptsCount: {
-      type: DataTypes.INTEGER(4),
+      type: DataTypes.TINYINT(4),
       allowNull: false,
       defaultValue: '0'
     },
     lastPasswordResetTime: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: sequelize.fn('current_timestamp')
+      defaultValue: DataTypes.literal('CURRENT_TIMESTAMP()')
     },
     isActive: {
       type: DataTypes.ENUM('active','inactive'),
       allowNull: false,
       defaultValue: 'active'
     },
-    created_at: {
+    createdAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: sequelize.fn('current_timestamp')
+      defaultValue: DataTypes.literal('CURRENT_TIMESTAMP()'),
+      field: 'created_at'
     },
-    updated_at: {
+    updatedAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: sequelize.fn('current_timestamp')
+      defaultValue: DataTypes.literal('CURRENT_TIMESTAMP()'),
+      field: 'updated_at'
     },
     deleted_at: {
       type: DataTypes.DATE,
       allowNull: true
     }
   }, {
+    freezeTableName: true,
     tableName: 'admin'
-  });
-};
+});
+
+module.exports = Admin;
