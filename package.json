@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/tnklaos/stock-game-api-2#readme",
   "dependencies": {
+    "bcrypt": "^3.0.8",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "dateformat": "^3.0.3",
