@@ -2,16 +2,17 @@ const express = require('express');
 const bettingRouter = express.Router();
 const {getRuleMatch} = require('../controller/rule');
 const {getGameMatch} = require('../controller/game');
-const {getUsersMatch,deductUserBalance} = require('../controller/user');
-const { findDynamicPayout } = require('../controller/dynamicOdds'); 
+const {getUsersMatch, deductUserBalance} = require('../controller/user');
 const { getProviderGameMaster } = require('../controller/master'); 
-const { storeBetting ,getAllUserBetData,getAllProviderBetData } = require('../controller/betting'); 
+const { storeBetting, getAllUserBetData, getAllProviderBetData } = require('../controller/betting'); 
 const { getPortalProvider } = require('../controller/portalProvider');
-const {successResponse, errorHandler,notFoundError,badRequestError} = require('../utils/utils');
+const {successResponse, notFoundError, badRequestError} = require('../utils/utils');
 const uuid4 = require('uuid/v4');
 var dateFormat = require('dateformat');
-const {validateGetBetting,validateBetting, validate} = require('../middleware/validators/betting');
+const {validateGetBetting, validateBetting} = require('../middleware/validators/betting');
+const validate = require('../middleware/validators/validate');
 const sourceRequest = require('../middleware/source/source');
+
 
 
 // Fetch Current Running betting Data BetStatus  = -1

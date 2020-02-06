@@ -4,8 +4,9 @@ const multer = require('multer');
 const uploadImage = require('../middleware/imageUpload/imageUpload');
 const {getPortalProvider} = require('../controller/portalProvider');
 const {getUser, storeUser, userLogin, logoutUser, getUserDetails, updateUser} = require('../controller/user');
-const {successResponse, serverError, badRequestError, notFoundError} = require('../utils/utils');
-const {validateUserLogin, validateUserLogout, validateGetUser, validateUpdateUser, validate} = require('../middleware/validators/user');
+const {successResponse, serverError, badRequestError} = require('../utils/utils');
+const {validateUserLogin, validateUserLogout, validateGetUser, validateUpdateUser} = require('../middleware/validators/user');
+const validate = require('../middleware/validators/validate');
 
 // Config for image upload
 const upload = multer({

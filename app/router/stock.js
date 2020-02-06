@@ -3,8 +3,8 @@ const stockRouter = express.Router();
 const {serverError,successResponse} = require('../utils/utils');
 const { getAllStock,getStockAnalysis } = require('../controller/stock');
 const {getUsersMatch} = require('../controller/user');
-const {validateGetStock, validate} = require('../middleware/validators/stock');
-
+const {validateGetStock} = require('../middleware/validators/stock');
+const validate = require('../middleware/validators/validate');
 
 
 stockRouter.get('/getStockList', async (req, res) => {

@@ -1,5 +1,4 @@
-const {body, validationResult} = require('express-validator/check');
-const {notFoundError} = require('../../utils/utils');
+const {body} = require('express-validator');
 
 const sourceRequest = async (req,res,next) => {
     try{

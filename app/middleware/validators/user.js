@@ -1,5 +1,4 @@
-const {body, validationResult, query} = require('express-validator/check');
-const {notFoundError} = require('../../utils/utils');
+const {body, query} = require('express-validator');
 
 // validation all filed in user filed
 const validateUserLogin = () => {
@@ -41,20 +40,9 @@ const validateUpdateUser = () => {
     ]
 }
 
-const validate = (req, res, next) => {
-    const errors = validationResult(req)
-    if (errors.isEmpty()) {
-      return next()
-    }
-    const extractedErrors = []
-    errors.array().map(err => extractedErrors.push({ [err.param]: err.msg }))
-    res.status(400).send(notFoundError(extractedErrors));   
-}
-
 module.exports = {
     validateUserLogin,
     validateUserLogout,
     validateGetUser,
-    validateUpdateUser,
-    validate
+    validateUpdateUser
 }
