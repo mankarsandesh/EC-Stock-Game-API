@@ -3,8 +3,10 @@ const ruleRouter = express.Router();
 const { notFoundError, successResponse,serverError} = require('../utils/utils');
 const { getPortalProvider } = require('../controller/portalProvider');
 const { getAllGameRule } = require('../controller/rule'); 
+const {validateRuleProvider} = require('../middleware/validators/rule');
+const validate = require('../middleware/validators/validate');
 
-ruleRouter.post('/getAllRules', async (req, res) => {
+ruleRouter.post('/getAllRules', validateRuleProvider(), validate,async (req, res) => {
     try {        
         const providerUUID = req.body.providerUUID;
         const findProvider = await getPortalProvider(providerUUID);
@@ -13,8 +15,7 @@ ruleRouter.post('/getAllRules', async (req, res) => {
          }
         const allRule = await getAllGameRule();
         res.send(successResponse(allRule)); 
-         
-    } catch (error) {
+    }catch(error){
         console.log(error);
         res.send(serverError());
     }
