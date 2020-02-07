@@ -6,7 +6,7 @@ const { getAllGameRule } = require('../controller/rule');
 
 ruleRouter.post('/getAllRules', async (req, res) => {
     try {        
-        const providerUUID = req.body.providerUUID;           
+        const providerUUID = req.body.providerUUID;
         const findProvider = await getPortalProvider(providerUUID);
          if(!findProvider){
             res.send(notFoundError('Provider Unable to Find.')); 

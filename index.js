@@ -19,6 +19,8 @@ const stockRouter = require('./app/router/stock');
 const bettingRouter = require('./app/router/betting');
 const gameRouter = require('./app/router/game');
 const adminRouter = require('./app/router/admin');
+const stockCrawlRouter = require('./app/router/stockCrawl');
+
 
 const bodyParser = require('body-parser');
 const port = process.env.PORT || 5005;
@@ -48,6 +50,7 @@ app.use(stockRouter);
 app.use(bettingRouter);
 app.use(gameRouter);
 app.use(adminRouter);
+app.use(stockCrawlRouter);
 
 app.listen(port, () => {
     console.log(`Server is up on port ${port}`);
