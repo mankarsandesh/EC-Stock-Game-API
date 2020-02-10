@@ -1,7 +1,8 @@
 
 const db = require('../db/db');
-const {fetchStockList} = require('../components/models/stock.interface');
-const {serverError,successResponse} = require('../utils/utils');
+const {fetchStockList,fetchStockAnalysis} = require('../components/models/stock.interface');
+const {serverError,successResponse,notFoundError} = require('../utils/utils');
+const { getUsersMatch } = require('./user_controller');
 
 const stockList  =  async (req, res) => {
     try {      
@@ -14,8 +15,7 @@ const stockList  =  async (req, res) => {
 }
 
 const getStockAnalysis  =  async (req, res) => {
-    try {      
-    
+    try { 
             const userUUID =  req.body.userUUID;
             const userData = await getUsersMatch(userUUID);   
             // check USER ID valid or not     
@@ -29,6 +29,7 @@ const getStockAnalysis  =  async (req, res) => {
         res.send(serverError());     
     }
 }
+
 module.exports = {
     stockList,
     getStockAnalysis

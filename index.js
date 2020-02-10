@@ -14,7 +14,7 @@ require('./app/db/db');
 const currencyRouter = require('./app/router/currency');
 const ruleRouter = require('./app/router/rule');
 const announcementRouter = require('./app/router/announcement');
-const userRouter = require('./app/router/user');
+const userRouter = require('./app/router/user_route');
 const stockRouter = require('./app/router/stock_route');
 const bettingRouter = require('./app/router/betting');
 const gameRouter = require('./app/router/game');

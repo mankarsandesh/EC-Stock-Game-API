@@ -6,8 +6,10 @@ const sharp = require('sharp');
 const fs = require('fs');
 const db = require('../db/db');
 const { QueryTypes } = require('sequelize');
-const {decreaseMainBalance, increaseMainBalance, increaseCreditBalance, decreaseCreditBalance, getPortalProvider, getActivePortalProvider, getPortalProviderByPID} = require('../controller/portalProvider');
-const {storeSession, getUserSessionByPID, deleteUserSessionByPID} = require('../controller/userSessions');
+const {decreaseMainBalance, increaseMainBalance, increaseCreditBalance, decreaseCreditBalance, getPortalProvider, getActivePortalProvider, getPortalProviderByPID} = require('./portalProvider');
+const {storeSession, getUserSessionByPID, deleteUserSessionByPID} = require('./userSessions');
+const {userUUIDMatch} = require('../components/models/user.interface');
+
 
 async function deductUserBalance(userID,betAmount) {
     try {
@@ -191,14 +193,9 @@ async function getUserDetails(portalProviderUUID, userUUID) {
 }
 
 async function getUsersMatch (userUUID) {
-    try {       
-        const checkUsers = await User.findOne({
-            where: {
-                UUID: userUUID
-            },
-            raw: true
-        });
-        return checkUsers;
+    try {  
+        const userData = await userUUIDMatch(userUUID);
+        return userData;
     } catch (error) {
         console.log(error);
         throw new Error();

@@ -3,7 +3,7 @@ const fs = require('fs');
 const uuid4 = require('uuid/v4');
 const User = require('../../models/user');
 const {getPortalProvider} = require('../../controller/portalProvider');
-const {getUsersMatch} = require('../../controller/user');
+const {getUsersMatch} = require('../../controller/user_controller');
 const {notFoundError, badRequestError, serverError} = require('../../utils/utils');
 
 
