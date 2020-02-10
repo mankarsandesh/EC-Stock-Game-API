@@ -11,7 +11,7 @@ require('dotenv').config();
 require('./app/db/db');
 
 // Routers
-const currencyRouter = require('./app/router/currency');
+const currencyRouter = require('./app/router/currency_route');
 const ruleRouter = require('./app/router/rule_route');
 const announcementRouter = require('./app/router/announcement');
 const userRouter = require('./app/router/user_route');
