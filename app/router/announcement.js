@@ -2,7 +2,7 @@ const express = require('express');
 const announcementRouter = express.Router();
 const {getAllAnnouncements, storeAnnouncement, getAnnouncementById, updateAnnouncementById} = require('../controller/announcement');
 const {successResponse, badRequestError, notFoundError, serverError} = require('../utils/utils');
-const { getPortalProvider } = require('../controller/portalProvider');
+const { getPortalProvider } = require('../controller/portalProvider_controller');
 const {validateAnnouncement} = require('../middleware/validators/announcement');
 const validate = require('../middleware/validators/validate');
 

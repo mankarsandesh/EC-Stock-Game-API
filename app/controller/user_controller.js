@@ -6,7 +6,7 @@ const sharp = require('sharp');
 const fs = require('fs');
 const db = require('../db/db');
 const { QueryTypes } = require('sequelize');
-const {decreaseMainBalance, increaseMainBalance, increaseCreditBalance, decreaseCreditBalance, getPortalProvider, getActivePortalProvider, getPortalProviderByPID} = require('./portalProvider');
+const {decreaseMainBalance, increaseMainBalance, increaseCreditBalance, decreaseCreditBalance, getPortalProvider, getActivePortalProvider, getPortalProviderByPID} = require('./portalProvider_controller');
 const {storeSession, getUserSessionByPID, deleteUserSessionByPID} = require('./userSessions');
 const {userUUIDMatch} = require('../components/models/user.interface');
 

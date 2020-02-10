@@ -1,14 +1,12 @@
 const PortalProvider = require('../models/portalProvider');
 const Sequelize = require('sequelize');
+const {checkPortalProvider} = require('../components/models/portalProvider.interface');
+
 
 async function getPortalProvider (providerUUID) {
     try {
-        console.log(providerUUID,"sasasasasasasa");
-        const provider = await PortalProvider.findOne({
-            where: {UUID: providerUUID},
-            raw : true
-        });
-        return provider;
+        const portalProvider = await checkPortalProvider(providerUUID);
+        return portalProvider;
     } catch (error) {
         console.log(error);
         throw new Error();
@@ -73,16 +71,6 @@ async function increaseMainBalance(balance, providerPID) {
         throw new Error();
     }
 }
-
-// async function getPortalProviderByPID (providerPID) {
-//     try {
-//         const provider = await PortalProvider.findOne({ where: { PID: providerPID }, raw: true });
-//         return provider;
-//     } catch (error) {
-//         console.log(error);
-//         throw new Error();
-//     }
-// } 
 
 async function increaseCreditBalance (balance, providerPID) {
     try {

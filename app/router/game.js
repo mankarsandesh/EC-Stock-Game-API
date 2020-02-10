@@ -1,7 +1,7 @@
 const express = require('express');
 const gameRouter = express.Router();
 const { notFoundError, successResponse,serverError} = require('../utils/utils');
-const { getPortalProvider  } = require('../controller/portalProvider');
+const { getPortalProvider  } = require('../controller/portalProvider_controller');
 const { getAllGameByProviderID } = require('../controller/game');
 
 // Get Game provider UUID wise

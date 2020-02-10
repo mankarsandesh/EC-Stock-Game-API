@@ -12,7 +12,7 @@ require('./app/db/db');
 
 // Routers
 const currencyRouter = require('./app/router/currency');
-const ruleRouter = require('./app/router/rule');
+const ruleRouter = require('./app/router/rule_route');
 const announcementRouter = require('./app/router/announcement');
 const userRouter = require('./app/router/user_route');
 const stockRouter = require('./app/router/stock_route');

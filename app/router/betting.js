@@ -1,11 +1,11 @@
 const express = require('express');
 const bettingRouter = express.Router();
-const {getRuleMatch} = require('../controller/rule');
+const {getRuleMatch} = require('../controller/rule_controller');
 const {getGameMatch} = require('../controller/game');
 const {getUsersMatch, deductUserBalance} = require('../controller/user_controller');
 const { getProviderGameMaster } = require('../controller/master'); 
 const { storeBetting, getAllUserBetData, getAllProviderBetData } = require('../controller/betting'); 
-const { getPortalProvider } = require('../controller/portalProvider');
+const { getPortalProvider } = require('../controller/portalProvider_controller');
 const {successResponse, notFoundError, badRequestError} = require('../utils/utils');
 const uuid4 = require('uuid/v4');
 var dateFormat = require('dateformat');
