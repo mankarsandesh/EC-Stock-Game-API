@@ -34,8 +34,37 @@ const userUUIDMatch  =  async (userUUID) => {
     }
 }
 
+const getUser = async (portalProviderUserID, portalProviderID) => {
+    try {
+        const user = await UserModel.findOne({
+            where: {
+                portalProviderUserID,
+                portalProviderID
+            },
+            raw: true
+        });
+        return user;
+    } catch (error) {
+        console.log(error);
+        throw new Error();
+    }
+}
+
+const storeUser = async (userData) => {
+    try {
+        const user = await UserModel.create(userData, { 
+            raw: true
+        });
+        return user.dataValues;
+    } catch (error) {
+        console.log(error);
+        return {error: error.errors[0].message}
+    }
+}
 
 module.exports = {
     UserBalanceDeduct,
-    userUUIDMatch
+    userUUIDMatch,
+    getUser,
+    storeUser
 }

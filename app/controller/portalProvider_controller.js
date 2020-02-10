@@ -116,7 +116,6 @@ async function decreaseCreditBalance (cutBalance, providerPID) {
 
 module.exports = {
     getPortalProvider,
-    //getPortalProviderByPID,
     increaseCreditBalance,
     decreaseCreditBalance,
     getActivePortalProvider,

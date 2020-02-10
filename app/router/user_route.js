@@ -3,7 +3,7 @@ const userRouter = express.Router();
 const multer = require('multer');
 const uploadImage = require('../middleware/imageUpload/imageUpload');
 const {getPortalProvider} = require('../controller/portalProvider_controller');
-const {getUser, storeUser, userLogin, logoutUser, getUserDetails, updateUser} = require('../controller/user_controller');
+const userController = require('../controller/user_controller');
 const {successResponse, serverError, badRequestError} = require('../utils/utils');
 const {validateUserLogin, validateUserLogout, validateGetUser, validateUpdateUser} = require('../middleware/validators/user');
 const validate = require('../middleware/validators/validate');
@@ -23,42 +23,7 @@ const upload = multer({
 });
 
 // User login
-userRouter.post('/users/login', validateUserLogin(), validate, async (req, res) => {
-    try {
-        const userBody = req.body;
-        const provider = await getPortalProvider(userBody.portalProviderUUID);
-        if(!provider) {
-            return res.status(400).send(badRequestError('Invalid Portal provider Id'));
-        }
-        userBody.portalProviderID = provider.PID;
-        const isUser = await getUser(userBody.portalProviderUserID, userBody.portalProviderUUID);
-        if(isUser) {
-            console.log(isUser);
-            const login = await userLogin(userBody.balance, isUser, provider);
-            console.log(login, 'user exists--------------------------------------------------');
-            if(!login.error) {
-                return res.send(successResponse(login));
-            } else {
-                return res.status(400).send(badRequestError(login.error));
-            }
-        } else {
-            const user = await storeUser(userBody);
-            if(user.error) {
-                return res.status(400).send(badRequestError(user.error));
-            }
-            const login = await userLogin(userBody.balance, user, provider);
-            console.log(login, 'user created-------------------------------------');
-            if(!login.error) {
-                return res.send(successResponse(login));
-            } else {
-                return res.status(400).send(badRequestError(login.error));
-            }
-        }
-    }catch(error){
-        console.log(error);
-        res.status(500).send(serverError());
-    }
-});
+userRouter.post('/users/login', validateUserLogin(), validate, userController.userCreate );
 
 userRouter.get('/users/logout', validateUserLogout(), validate, async (req, res) => {
     try {

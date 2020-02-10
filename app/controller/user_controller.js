@@ -8,7 +8,9 @@ const db = require('../db/db');
 const { QueryTypes } = require('sequelize');
 const {decreaseMainBalance, increaseMainBalance, increaseCreditBalance, decreaseCreditBalance, getPortalProvider, getActivePortalProvider, getPortalProviderByPID} = require('./portalProvider_controller');
 const {storeSession, getUserSessionByPID, deleteUserSessionByPID} = require('./userSessions');
-const {userUUIDMatch,UserBalanceDeduct} = require('../components/models/user.interface');
+const {userUUIDMatch,UserBalanceDeduct,getUser,storeUser} = require('../components/models/user.interface');
+// ERROR HELPER
+const { successResponse, notFoundError, badRequestError } = require('../utils/utils');
 
 
 const deductUserBalance = async (userID,betAmount) => {
@@ -20,31 +22,68 @@ const deductUserBalance = async (userID,betAmount) => {
         return {error: error.errors[0].message}
     }
 }
-async function storeUser ({portalProviderUserID, portalProviderID, userPolicyID=1, firstName=null, middleName=null, lastName=null, email=null, password=null, balance=0}) {
+
+const userCreate = async (req,res) => {
     try {
-        const user = await User.create({
-            portalProviderUserID,
-            portalProviderID,
-            userPolicyID,
-            firstName,
-            middleName,
-            lastName,
-            email,
-            password,
-            balance: 0,
-            lastCalledTime: moment(Date.now()).format('YYYY-MM-DD HH:mm:ss'),
-            lastIP: '10.10.10.10',
-            loginTime: moment(Date.now()).format('YYYY-MM-DD HH:mm:ss'),
-            UUID: uuidv4()
-        }, { 
-            raw: true
-        });
-        return user.dataValues;
-    } catch (error) {
+        const userBody = req.body;
+        const { portalProviderUserID, portalProviderID, userPolicyID=1, firstName=null, middleName=null, lastName=null, email=null, password=null, balance=0 } = req.body;
+
+        const provider = await getPortalProvider(userBody.portalProviderUUID);
+        if(!provider) {
+            return res.status(400).send(badRequestError('Invalid Portal provider Id'));
+        }
+        userBody.portalProviderID = provider.PID;
+      console.log(userBody);
+        const isUser = await getUser(userBody.portalProviderUserID, userBody.portalProviderUUID);
+        if(isUser) {
+            console.log(isUser);
+            const login = await userLogin(userBody.balance, isUser, provider);
+            console.log(login, 'user exists--------------------------------------------------');
+            if(!login.error) {
+                return res.send(successResponse(login));
+            } else {
+                return res.status(400).send(badRequestError(login.error));
+            }
+        } else {
+
+            const todayDate = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
+            const UserData = {
+                portalProviderUserID,
+                portalProviderID: userBody.portalProviderID,
+                userPolicyID,
+                firstName,
+                middleName,
+                lastName,
+                email,
+                password,
+                balance,
+                lastCalledTime: todayDate,
+                lastIP: '10.10.10.10',
+                loginTime: todayDate,
+                "UUID": uuidv4()
+            }
+            console.log(UserData);
+
+            const user = await storeUser(UserData);
+            if(user.error) {
+                return res.status(400).send(badRequestError(user.error));
+            }
+            const login = await userLogin(userBody.balance, user, provider);
+            console.log(login, 'user created-------------------------------------');
+            if(!login.error) {
+                return res.send(successResponse(login));
+            } else {
+                return res.status(400).send(badRequestError(login.error));
+            }
+        }
+    }catch(error){
         console.log(error);
-        return {error: error.errors[0].message}
+        res.status(500).send(serverError());
     }
+
+
 }
+
 
 async function userLogin(balance, user, provider) {
     try {
@@ -146,21 +185,7 @@ async function increaseUserBalance (balance, userPID) {
 //     }
 // }
 
-async function getUser(portalProviderUserID, portalProviderID) {
-    try {
-        const user = await User.findOne({
-            where: {
-                portalProviderUserID,
-                portalProviderID
-            },
-            raw: true
-        });
-        return user;
-    } catch (error) {
-        console.log(error);
-        throw new Error();
-    }
-}
+
 
 async function getUserDetails(portalProviderUUID, userUUID) {
     try {
@@ -219,6 +244,7 @@ async function updateUser (userUUID, data) {
 }
 
 module.exports = {
+    userCreate,
     storeUser,
     userLogin,
     logoutUser,
