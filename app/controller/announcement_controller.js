@@ -1,27 +1,28 @@
-const express = require('express');
-const announcementRouter = express.Router();
-const {getAllAnnouncements, storeAnnouncement, getAnnouncementById, updateAnnouncementById} = require('../controller/announcement');
+//Announcement Interface Model
+const {getAllAnnouncements , storeAnnouncement , getAnnouncementById , updateAnnouncementById} = require('../components/models/announcement.interface');
+
+// helper function for response
 const {successResponse, badRequestError, notFoundError, serverError} = require('../utils/utils');
+
+// Portal Provider Controller
 const { getPortalProvider } = require('../controller/portalProvider_controller');
-const {validateAnnouncement} = require('../middleware/validators/announcement');
-const validate = require('../middleware/validators/validate');
 
 
-// Get All Announcements
-announcementRouter.get('/announcement', async (req, res) => {
+
+// Get all announcements
+const allAnnouncements  = async(req,res) => {
     try {
         const announcements = await getAllAnnouncements();
         return res.send(successResponse(announcements));
     } catch (error) {
         console.log(error);
-        res.status(500).send(serverError());
+        throw new Error();
     }
-});
+}
 
-// Create Announcement
-announcementRouter.post('/announcement',validateAnnouncement(),validate, async (req, res) => {
-    try {
-        
+// Store Announcement
+const announcementStore = async (req,res) => {
+    try {        
         const userBody = req.body;
         const providerData = await getPortalProvider(req.body.providerUUID);
         // Portal provider UUID valid check
@@ -37,25 +38,23 @@ announcementRouter.post('/announcement',validateAnnouncement(),validate, async (
         console.log(error);
         res.status(500).send(serverError());
     }
-});
+}
 
-// Get Announcement by id
-announcementRouter.get('/announcement/:id', async (req, res) => {
+// Get announcement by Id
+const  announcementById = async (req,res) => {
     try {
         const announcementId = req.params.id;
+        console.log(announcementId);
         const announcement = await getAnnouncementById(announcementId);
-        if(!announcement) {
-            return res.status(404).send(notFoundError('No announcement found'));
-        }
         return res.send(successResponse(announcement));
     } catch (error) {
         console.log(error);
-        res.status(500).send(serverError());
+        throw new Error();
     }
-});
+}
 
 // Update Announcement By Id
-announcementRouter.put('/announcement/:id', async (req, res) => {
+const announcementUpdateById  = async (req,res) => {
     try {
         const announcementId = req.params.id;
         const announcement = await getAnnouncementById(announcementId);
@@ -73,6 +72,11 @@ announcementRouter.put('/announcement/:id', async (req, res) => {
         console.log(error);
         res.status(500).send(serverError());
     }
-});
+}
 
-module.exports = announcementRouter;
+module.exports = {
+    allAnnouncements,
+    announcementStore,
+    announcementById,
+    announcementUpdateById
+}
