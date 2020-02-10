@@ -8,16 +8,12 @@ const db = require('../db/db');
 const { QueryTypes } = require('sequelize');
 const {decreaseMainBalance, increaseMainBalance, increaseCreditBalance, decreaseCreditBalance, getPortalProvider, getActivePortalProvider, getPortalProviderByPID} = require('./portalProvider_controller');
 const {storeSession, getUserSessionByPID, deleteUserSessionByPID} = require('./userSessions');
-const {userUUIDMatch} = require('../components/models/user.interface');
+const {userUUIDMatch,UserBalanceDeduct} = require('../components/models/user.interface');
 
 
-async function deductUserBalance(userID,betAmount) {
+const deductUserBalance = async (userID,betAmount) => {
     try {
-        const userBalance = await db.query('UPDATE user SET balance = balance - :Amount WHERE PID = :PID',
-        {
-          replacements: { Amount: betAmount, PID:userID},
-          type: QueryTypes.UPDATE
-        });
+        const userBalance = await UserBalanceDeduct(userID,betAmount);
         return userBalance;
     } catch (error) {
         console.log(error);

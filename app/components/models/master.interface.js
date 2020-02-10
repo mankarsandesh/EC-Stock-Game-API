@@ -1,7 +1,9 @@
 const { QueryTypes } = require('sequelize');
-const db = require('../db/db');
+const Sequelize = require('sequelize');
+const db = require('../../db/db');
 
-async function getProviderGameMaster (gameUUID) {
+
+const getProviderGameMaster = async (gameUUID) => {
     try {       
         const Game = await db.query('SELECT game.stockID,game.PID,providerGameSetup.portalProviderID FROM game JOIN  providerGameSetup ON game.providerGameSetupID = providerGameSetup.PID WHERE game.gameStatus= 1 AND ProviderGameSetup.isActive = "active" AND game.UUID= :UUID AND ProviderGameSetup.deleted_at IS NULL',
         {
@@ -14,6 +16,8 @@ async function getProviderGameMaster (gameUUID) {
         throw new Error();
     }
 }
+
+
 module.exports = {
     getProviderGameMaster
 }
