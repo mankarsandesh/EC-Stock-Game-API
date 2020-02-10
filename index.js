@@ -17,7 +17,7 @@ const announcementRouter = require('./app/router/announcement_route');
 const userRouter = require('./app/router/user_route');
 const stockRouter = require('./app/router/stock_route');
 const bettingRouter = require('./app/router/betting_route');
-const gameRouter = require('./app/router/game');
+const gameRouter = require('./app/router/game_route');
 const adminRouter = require('./app/router/admin');
 const stockCrawlRouter = require('./app/router/stockCrawl');
 

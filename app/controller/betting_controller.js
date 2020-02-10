@@ -12,7 +12,7 @@ const { storeBetting } = require('../components/models/betting.interface');
 // all controller
 const { ProviderGameMaster } = require('./master_controller'); 
 const {getRuleMatch} = require('../controller/rule_controller');
-const {getGameMatch} = require('../controller/game');
+const {getGameMatch} = require('../controller/game_controller');
 const {getUsersMatch, deductUserBalance} = require('../controller/user_controller');
 const { getPortalProvider } = require('../controller/portalProvider_controller');
 
