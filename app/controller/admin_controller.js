@@ -1,4 +1,4 @@
-const {findAdminPolicyByPID} = require('./adminPolicy');
+const {adminPolicyByPID} = require('./adminPolicy_controller');
 
 const {adminCheck} = require('../components/models/admin.interface');
 const {serverError, successResponse} = require('../utils/utils');
@@ -17,7 +17,7 @@ const providerLogin = async (req,res) => {
         if(admin.isActive == 'inactive') {
             return { code: 401, error: 'You are inactive by system admin' }
         }
-        const adminPolicy = await findAdminPolicyByPID(admin.adminPolicyID);
+        const adminPolicy = await adminPolicyByPID(admin.adminPolicyID);
         if(!adminPolicy) {
             return { code: 401, error: 'AdminPolicyId does not exist' }
         }
