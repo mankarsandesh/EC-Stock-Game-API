@@ -1,12 +1,16 @@
-const Admin = require('../models/admin');
-const {findAdminPolicyByPID} = require('../controller/adminPolicy');
+const {findAdminPolicyByPID} = require('./adminPolicy');
 
-async function providerLogin (username, password) {
+const {adminCheck} = require('../components/models/admin.interface');
+const {serverError, successResponse} = require('../utils/utils');
+const {generateAuthToken} = require('../utils/authToken/authToken');
+
+const providerLogin = async (req,res) => {
     try {
-        const admin = await Admin.findOne({
-            where: { username },
-            raw: true
-        });
+
+        const username = req.body.username;
+        const password = req.body.password;
+        const admin = await adminCheck(username);
+
         if(!admin) {
             return { code: 400, error: 'Invalid credentials' }
         }
@@ -21,15 +25,15 @@ async function providerLogin (username, password) {
             return { code: 401, error: 'Admin Policy does not allows you to login' }
         }
         console.log(admin);
-        // const isValid = await bcrypt.compare(password, admin.password);
-        // if(!isValid) {
-        //     return { code: 401, error: 'Invalid username or password' }
-        // }
+         
         delete admin.password;
-        return admin;
+        const token = await generateAuthToken(admin.PID);
+       
+        return res.send(successResponse({ admin, token }, 'You are successfully logged in'));
+
     } catch (error) {
         console.log(error);
-        throw new Error();
+        res.status(500).send(serverError());
     }
 }
 

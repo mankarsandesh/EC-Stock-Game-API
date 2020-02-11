@@ -12,7 +12,6 @@ const {successResponse,serverError} = require('../utils/utils');
 
 stockCrawlRouter.get('/sh000001', async (req, res) => {
     try {
-        console.log("Hello");
         const stock = await getStockData();       
         return res.send(successResponse(stock));
     } catch (error) {
